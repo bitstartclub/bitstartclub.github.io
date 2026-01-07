@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Typing & Mouse Skill Trainers | BITSTART.CLUB</title>
+    <meta name="description" content="Improve your keyboard and mouse skills with free browser trainers. Typing speed runs and aim accuracy challenges. No registration.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background: #0b0f1a; color: #f3f4f6; }
+        .font-game { font-family: 'Orbitron', sans-serif; }
+        .glass-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .neon-text { text-shadow: 0 0 10px rgba(99, 102, 241, 0.8); }
+        .accent-hover:hover { border-color: #6366f1; transform: translateY(-5px); transition: all 0.3s ease; }
+        .ad-placeholder { border: 1px dashed rgba(99, 102, 241, 0.3); background: rgba(15, 23, 42, 0.5); }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+    <header class="bg-[#0f172a]/80 border-b border-indigo-900/50 py-4">
+        <div class="container mx-auto px-4 flex justify-between items-center">
+            <a href="index.html" class="text-3xl font-black font-game text-indigo-500 neon-text">BITSTART<span class="text-white">.CLUB</span></a>
+            <nav class="hidden md:flex space-x-8">
+                <a href="index.html" class="text-sm font-bold uppercase hover:text-indigo-400">Home</a>
+                <a href="learning.html" class="text-sm font-bold uppercase text-indigo-400">Learning</a>
+                <a href="classic.html" class="text-sm font-bold uppercase hover:text-indigo-400">Classic</a>
+                <a href="modern.html" class="text-sm font-bold uppercase hover:text-indigo-400">Modern</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="flex-grow container mx-auto px-4 py-12">
+        <h1 class="text-4xl font-game font-bold text-indigo-400 mb-8 uppercase neon-text">Skill Trainers</h1>
+        
+        <!-- Category Ad -->
+        <div class="ad-placeholder w-full h-20 mb-12 flex items-center justify-center rounded-2xl">
+            <span class="text-indigo-900 font-bold uppercase tracking-widest text-[10px]">Category Top Banner Ad</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <!-- Game Card 1 -->
+            <div class="glass-card p-6 rounded-3xl border-2 border-transparent accent-hover flex flex-col">
+                <div class="h-32 bg-indigo-900/20 rounded-2xl mb-4 flex items-center justify-center text-4xl">⌨️</div>
+                <h3 class="font-game text-lg font-bold mb-2 text-indigo-400 uppercase">Typing Sprint</h3>
+                <p class="text-gray-400 text-xs mb-6 flex-grow">Test your WPM (Words Per Minute) in a high-pressure neon environment.</p>
+                <a href="games/typing-sprint.html" class="w-full bg-indigo-600 text-white text-center py-3 rounded-xl font-game font-bold text-xs tracking-widest">LAUNCH</a>
+            </div>
+            <!-- Game Card 2 -->
+            <div class="glass-card p-6 rounded-3xl border-2 border-transparent accent-hover flex flex-col">
+                <div class="h-32 bg-indigo-900/20 rounded-2xl mb-4 flex items-center justify-center text-4xl">🎯</div>
+                <h3 class="font-game text-lg font-bold mb-2 text-indigo-400 uppercase">Aim Master</h3>
+                <p class="text-gray-400 text-xs mb-6 flex-grow">Improve your mouse precision and reaction time for FPS games.</p>
+                <a href="games/aim-master.html" class="w-full bg-indigo-600 text-white text-center py-3 rounded-xl font-game font-bold text-xs tracking-widest">LAUNCH</a>
+            </div>
+            <!-- Game Card 3 -->
+            <div class="glass-card p-6 rounded-3xl border-2 border-transparent accent-hover flex flex-col">
+                <div class="h-32 bg-indigo-900/20 rounded-2xl mb-4 flex items-center justify-center text-4xl">🖱️</div>
+                <h3 class="font-game text-lg font-bold mb-2 text-indigo-400 uppercase">Click Speed</h3>
+                <p class="text-gray-400 text-xs mb-6 flex-grow">Measure your Clicks Per Second (CPS) and challenge your limits.</p>
+                <a href="games/click-speed.html" class="w-full bg-indigo-600 text-white text-center py-3 rounded-xl font-game font-bold text-xs tracking-widest">LAUNCH</a>
+            </div>
+            <!-- Game Card 4 -->
+            <div class="glass-card p-6 rounded-3xl border-2 border-transparent accent-hover flex flex-col">
+                <div class="h-32 bg-indigo-900/20 rounded-2xl mb-4 flex items-center justify-center text-4xl">🧠</div>
+                <h3 class="font-game text-lg font-bold mb-2 text-indigo-400 uppercase">Code Typer</h3>
+                <p class="text-gray-400 text-xs mb-6 flex-grow">Practice typing real code snippets in JS, Python, and C++.</p>
+                <a href="games/code-typer.html" class="w-full bg-indigo-600 text-white text-center py-3 rounded-xl font-game font-bold text-xs tracking-widest">LAUNCH</a>
+            </div>
+        </div>
+
+        <!-- Inline Ad Block -->
+        <div class="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8">
+             <div class="ad-placeholder h-48 rounded-3xl flex items-center justify-center">
+                 <span class="text-indigo-900 font-bold uppercase tracking-widest text-xs">Square Ad Unit</span>
+             </div>
+             <div class="ad-placeholder h-48 rounded-3xl flex items-center justify-center">
+                 <span class="text-indigo-900 font-bold uppercase tracking-widest text-xs">Square Ad Unit</span>
+             </div>
+        </div>
+    </main>
+
+    <footer class="bg-[#0f172a] border-t border-indigo-900/50 py-8 text-center text-xs text-gray-600 uppercase tracking-widest">
+        BITSTART.CLUB - THE LEARNING LAB
+    </footer>
+</body>
+</html>

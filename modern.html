@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- SEO Meta Tags -->
+    <title>Modern Browser Games & Web Puzzles - BITSTART.CLUB</title>
+    <meta name="description" content="Discover modern HTML5 games and physics puzzles. Explore experimental web experiences with zero data collection at BITSTART.CLUB.">
+    <meta name="keywords" content="modern browser games, html5 games, web puzzles, physics games, new online games">
+    <link rel="canonical" href="https://bitstart.club/modern.html">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="Modern Web Games | BITSTART.CLUB">
+    <meta property="og:description" content="The future of web gaming. Experimental and high-speed HTML5 puzzles.">
+    <meta property="og:url" content="https://bitstart.club/modern.html">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background: #0b0f1a; color: #f3f4f6; }
+        .font-game { font-family: 'Orbitron', sans-serif; }
+        .glass-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .neon-text { text-shadow: 0 0 10px rgba(236, 72, 153, 0.8); }
+        .accent-bg { background: #ec4899; }
+        .accent-hover:hover { border-color: #ec4899; transform: translateY(-5px); transition: all 0.3s ease; }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+    <header class="bg-[#0f172a]/80 border-b border-indigo-900/50 sticky top-0 z-50 backdrop-blur-md">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <a href="index.html" class="text-3xl font-black font-game text-indigo-500 tracking-widest">BITSTART<span class="text-white">.CLUB</span></a>
+            <nav class="hidden md:flex space-x-8">
+                <a href="index.html" class="text-sm font-bold uppercase hover:text-indigo-400 transition">Home</a>
+                <a href="learning.html" class="text-sm font-bold uppercase hover:text-indigo-400 transition">Learning</a>
+                <a href="classic.html" class="text-sm font-bold uppercase hover:text-indigo-400 transition">Classic</a>
+                <a href="modern.html" class="text-sm font-bold uppercase text-pink-500">Modern</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="flex-grow container mx-auto px-4 py-12">
+        <div class="mb-12 text-center">
+            <h1 class="text-4xl font-game font-bold text-pink-500 mb-4 uppercase neon-text">Modern Era</h1>
+            <p class="text-gray-400 max-w-2xl mx-auto">New web technologies delivering high-performance gaming directly in your browser.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="glass-card p-6 rounded-3xl border-2 border-transparent accent-hover flex flex-col h-full">
+                <div class="h-40 bg-pink-900/10 rounded-2xl mb-6 flex items-center justify-center text-5xl">🚀</div>
+                <h3 class="font-game text-xl font-bold mb-3 text-pink-500 uppercase">Void Runner</h3>
+                <p class="text-gray-400 text-sm mb-6 flex-grow">Procedural runner with adaptive difficulty and neon synth visuals.</p>
+                <a href="games/void-runner.html" class="accent-bg text-white text-center py-4 rounded-2xl font-game font-bold text-sm tracking-widest hover:opacity-90 transition">PLAY NOW</a>
+            </div>
+            <!-- More cards... -->
+        </div>
+    </main>
+</body>
+</html>

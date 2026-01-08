@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <!-- SEO Meta Tags -->
+    <title>Arkanoid | Classic Brick Breaker - BITSTART.CLUB</title>
+    <meta name="description" content="Play the definitive Arkanoid classic. No registration, local high score saving, and the full history of the 1986 arcade masterpiece. Optimized for BITSTART.CLUB.">
+    <meta name="keywords" content="arkanoid online, breakout game, brick breaker classic, play retro games, bitstart club">
+    <link rel="canonical" href="https://bitstart.club/games/arkanoid.html">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y48JGFP9V9"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+    
+      gtag('config', 'G-Y48JGFP9V9');
+    </script>  
+  
+    <style>
+        body { font-family: 'Inter', sans-serif; background: #0b0f1a; color: #f3f4f6; overflow-x: hidden; }
+        .font-game { font-family: 'Orbitron', sans-serif; }
+        .glass-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .neon-text { text-shadow: 0 0 10px rgba(34, 197, 94, 0.8); }
+        .neon-border { border: 2px solid #22c55e; box-shadow: 0 0 15px rgba(34, 197, 94, 0.4); }
+        .ad-placeholder { border: 1px dashed rgba(34, 197, 94, 0.3); background: rgba(15, 23, 42, 0.5); }
+        
+        .game-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            aspect-ratio: 4 / 3;
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+            touch-action: none;
+        }
+
+        .overlay-screen {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 100;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        @media (max-height: 850px) {
+            .history-section { margin-top: 1.5rem; }
+            .header-nav { position: static; }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Header -->
+    <header class="bg-[#0f172a]/80 border-b border-indigo-900/50 z-50 backdrop-blur-md header-nav">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <a href="../index.html" class="text-2xl md:text-3xl font-black font-game text-indigo-500 tracking-widest neon-text">BITSTART<span class="text-white">.CLUB</span></a>
+            <nav class="hidden md:flex space-x-8">
+                <a href="../index.html" class="text-sm font-bold uppercase hover:text-indigo-400 transition">Home</a>
+                <a href="../learning.html" class="text-sm font-bold uppercase hover:text-indigo-400 transition">Learning</a>
+                <a href="../classic.html" class="text-sm font-bold uppercase text-green-400">Classic</a>
+                <a href="../modern.html" class="text-sm font-bold uppercase hover:text-indigo-400 transition">Modern</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="flex-grow container mx-auto px-2 md:px-4 py-4 main-content">
+        <div class="flex flex-col lg:flex-row gap-6">
+            
+            <!-- Game Zone -->
+            <div class="flex-grow">
+                <div class="glass-card p-3 md:p-6 rounded-3xl neon-border relative mb-6">
+                    
+                    <!-- Score Panel -->
+                    <div class="flex justify-between mb-4 font-game px-4">
+                        <div class="text-left">
+                            <div class="text-[10px] text-gray-500 uppercase tracking-tighter">Score</div>
+                            <div class="text-xl md:text-2xl font-black text-green-400" id="score">0</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-[10px] text-gray-500 uppercase tracking-tighter">High Score</div>
+                            <div class="text-xl md:text-2xl font-black text-indigo-400" id="highScore">0</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-[10px] text-gray-500 uppercase tracking-tighter">Shields</div>
+                            <div class="text-xl md:text-2xl font-black text-green-400" id="lives">3</div>
+                        </div>
+                    </div>
+
+                    <div class="game-wrapper border border-white/5">
+                        <canvas id="gameCanvas" width="800" height="600"></canvas>
+                        
+                        <!-- Start Screen -->
+                        <div id="startScreen" class="overlay-screen">
+                            <h1 class="text-4xl md:text-6xl font-game font-black text-green-400 mb-6 neon-text uppercase tracking-tight">Arkanoid</h1>
+                            <div class="space-y-2 text-gray-400 text-sm mb-8 font-game">
+                                <p>Move: Mouse or Arrows</p>
+                                <p>Fire/Start: Click or Space</p>
+                                <p>Pause: Esc</p>
+                            </div>
+                            <button id="startBtn" class="bg-white text-black font-game font-bold px-12 py-4 rounded-2xl hover:bg-green-500 transition active:scale-95 uppercase">Commence Operation</button>
+                        </div>
+
+                        <!-- Message Overlay -->
+                        <div id="messageOverlay" class="overlay-screen hidden">
+                            <h2 id="messageTitle" class="text-4xl font-game font-bold mb-4 uppercase"></h2>
+                            <p id="messageScoreContainer" class="text-white text-xl mb-8 font-game"></p>
+                            <button id="restartBtn" class="bg-green-600 hover:bg-green-500 text-white font-game font-bold px-12 py-4 rounded-2xl transition uppercase">Reboot System</button>
+                        </div>
+                    </div>
+
+                    <div id="gameStatus" class="mt-4 h-6 text-center text-xs font-game text-yellow-400 uppercase tracking-widest"></div>
+                </div>
+
+                <!-- History Section -->
+                <div class="glass-card p-6 md:p-8 rounded-3xl border border-white/5 history-section">
+                    <h2 class="text-xl md:text-2xl font-game font-bold text-indigo-400 mb-6 uppercase tracking-wider">The Legacy of Arkanoid</h2>
+                    <div class="space-y-4 text-gray-300 leading-relaxed text-sm">
+                        <p>
+                            Developed by Taito in 1986, <strong>Arkanoid</strong> expanded on the Breakout formula by adding power-ups, variety in brick types, and the iconic "Vaus" space vessel. Unlike its predecessors, Arkanoid featured a narrative involving a mothership under attack and a lone escape craft.
+                        </p>
+                        <p>
+                            The game introduced a distinct boss character, "DOH," a giant stone head that represented one of the first final boss encounters in the arcade puzzle genre. Its precise paddle control and increasing ball speed set the gold standard for brick-breaking mechanics that persists to this day.
+                        </p>
+                        <div class="bg-black/30 p-4 rounded-xl border-l-4 border-green-500 my-4">
+                            <p class="italic text-xs text-gray-400">
+                                Professional Insight: Arkanoid was one of the first games to use a specialized rotary controller (spinner) to allow players to move the paddle with extreme precision and varying speeds.
+                            </p>
+                        </div>
+                        <p>
+                            Our version at BITSTART.CLUB features full mouse-to-paddle synchronization and high-frequency collision detection, ensuring the responsive feel of the original hardware.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <aside class="w-full lg:w-1/4 space-y-6">
+                <div class="ad-placeholder h-40 flex items-center justify-center rounded-3xl">
+                    <span class="text-green-900 font-bold uppercase tracking-widest text-[10px]">Top Sidebar Ad</span>
+                </div>
+                
+                <div class="glass-card p-6 rounded-3xl border border-green-900/50">
+                    <h3 class="font-game text-xs font-bold text-green-400 mb-4 uppercase">Classic Library</h3>
+                    <ul class="space-y-3 text-sm">
+                        <li class="flex items-center gap-2 text-green-400 font-bold"><div class="w-1.5 h-1.5 rounded-full bg-green-500"></div> Arkanoid</li>
+                        <li><a href="snake.html" class="hover:text-green-400 transition">Neon Snake</a></li>
+                        <li><a href="pong.html" class="hover:text-green-400 transition">Cyber Pong</a></li>
+                    </ul>
+                </div>
+
+                <div class="glass-card p-6 rounded-3xl border border-indigo-900/50">
+                    <h4 class="text-xs font-bold uppercase text-indigo-400 mb-2 font-game">Educational Value</h4>
+                    <p class="text-[10px] text-gray-500 leading-tight">
+                        Arkanoid serves as a practical demonstration of the Law of Reflection. Players learn to calculate angles of incidence and manage velocity vectors in real-time.
+                    </p>
+                </div>
+
+                <div class="ad-placeholder h-64 flex items-center justify-center rounded-3xl">
+                    <span class="text-green-900 font-bold uppercase tracking-widest text-[10px]">Square Ad Unit</span>
+                </div>
+            </aside>
+        </div>
+    </main>
+
+    <footer class="bg-[#0f172a] border-t border-indigo-900/50 py-8 mt-12">
+        <div class="container mx-auto px-4 text-center">
+            <div class="flex justify-center space-x-6 md:space-x-8 text-[9px] font-bold uppercase tracking-widest text-gray-500 mb-6">
+                <a href="../privacy.html" class="hover:text-green-400 transition">Privacy</a>
+                <a href="../terms.html" class="hover:text-green-400 transition">Terms</a>
+                <a href="../contact.html" class="hover:text-green-400 transition">Support</a>
+            </div>
+            <p class="text-[9px] text-gray-800 uppercase tracking-[0.3em]">© 2026 BITSTART.CLUB • THE NO-DATA ZONE</p>
+        </div>
+    </footer>
+
+    <script>
+        'use strict';
+
+        const CONFIG = {
+            REFERENCE_WIDTH: 800,
+            REFERENCE_HEIGHT: 600,
+            PADDLE: { WIDTH: 120, HEIGHT: 15, SPEED: 0.6, Y_OFFSET: 30, COLOR: '#22c55e' },
+            BALL: { RADIUS: 8, BASE_SPEED: 0.35, MAX_SPEED: 0.65, SPEED_INC: 0.005, COLOR: '#fff' },
+            BRICK: { ROWS: 5, COLS: 10, WIDTH: 70, HEIGHT: 25, PADDING: 6, OFF_X: 25, OFF_Y: 60, POINTS: 20 },
+            PARTICLES: { COUNT: 8, LIFE: 40 }
+        };
+
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const scoreEl = document.getElementById('score');
+        const highScoreEl = document.getElementById('highScore');
+        const livesEl = document.getElementById('lives');
+        const messageOverlay = document.getElementById('messageOverlay');
+        const messageTitle = document.getElementById('messageTitle');
+        const messageScoreContainer = document.getElementById('messageScoreContainer');
+        const startScreen = document.getElementById('startScreen');
+        const startBtn = document.getElementById('startBtn');
+        const restartBtn = document.getElementById('restartBtn');
+
+        class SoundManager {
+            constructor() { this.audioCtx = null; }
+            init() { if (!this.audioCtx) this.audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
+            play(freq, dur, type = 'square') {
+                if (!this.audioCtx) return;
+                const osc = this.audioCtx.createOscillator();
+                const gain = this.audioCtx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, this.audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.05, this.audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, this.audioCtx.currentTime + dur);
+                osc.connect(gain); gain.connect(this.audioCtx.destination);
+                osc.start(); osc.stop(this.audioCtx.currentTime + dur);
+            }
+        }
+        const audio = new SoundManager();
+
+        class Particle {
+            constructor(x, y, color) {
+                this.x = x; this.y = y; this.color = color;
+                this.size = Math.random() * 3 + 1;
+                this.dx = (Math.random() - 0.5) * 4;
+                this.dy = (Math.random() - 0.5) * 4;
+                this.life = CONFIG.PARTICLES.LIFE;
+                this.maxLife = this.life;
+            }
+            update(dt) { this.x += this.dx; this.y += this.dy; this.life--; }
+            draw() {
+                ctx.globalAlpha = Math.max(0, this.life / this.maxLife);
+                ctx.fillStyle = this.color;
+                ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
+                ctx.globalAlpha = 1;
+            }
+        }
+
+        class Brick {
+            constructor(x, y, w, h, color) {
+                this.x = x; this.y = y; this.w = w; this.h = h; this.color = color; this.active = true;
+            }
+            draw() {
+                if (!this.active) return;
+                ctx.fillStyle = this.color;
+                ctx.fillRect(this.x, this.y, this.w, this.h);
+                ctx.strokeStyle = 'rgba(0,0,0,0.3)';
+                ctx.strokeRect(this.x, this.y, this.w, this.h);
+            }
+        }
+
+        class Game {
+            constructor() {
+                this.width = CONFIG.REFERENCE_WIDTH;
+                this.height = CONFIG.REFERENCE_HEIGHT;
+                this.setupInputs();
+                this.highScore = parseInt(localStorage.getItem('arkanoidHighScore')) || 0;
+                this.reset();
+            }
+
+            reset() {
+                this.score = 0;
+                this.lives = 3;
+                this.state = 'START';
+                this.paddle = { 
+                    x: this.width / 2 - CONFIG.PADDLE.WIDTH / 2, 
+                    y: this.height - CONFIG.PADDLE.Y_OFFSET - CONFIG.PADDLE.HEIGHT, 
+                    w: CONFIG.PADDLE.WIDTH, 
+                    h: CONFIG.PADDLE.HEIGHT 
+                };
+                this.ball = { x: 0, y: 0, dx: 0, dy: 0, r: CONFIG.BALL.RADIUS, speed: CONFIG.BALL.BASE_SPEED };
+                this.bricks = [];
+                this.particles = [];
+                this.keys = {};
+                this.mouseX = this.width / 2;
+                this.isMouseMoved = false;
+                this.createBricks();
+                this.resetBall();
+                this.updateUI();
+            }
+
+            createBricks() {
+                const colors = ['#e94560', '#f39c12', '#2ecc71', '#3498db', '#9b59b6'];
+                for (let r = 0; r < CONFIG.BRICK.ROWS; r++) {
+                    for (let c = 0; c < CONFIG.BRICK.COLS; c++) {
+                        const x = c * (CONFIG.BRICK.WIDTH + CONFIG.BRICK.PADDING) + CONFIG.BRICK.OFF_X;
+                        const y = r * (CONFIG.BRICK.HEIGHT + CONFIG.BRICK.PADDING) + CONFIG.BRICK.OFF_Y;
+                        this.bricks.push(new Brick(x, y, CONFIG.BRICK.WIDTH, CONFIG.BRICK.HEIGHT, colors[r % colors.length]));
+                    }
+                }
+            }
+
+            resetBall() {
+                this.ball.x = this.paddle.x + this.paddle.w / 2;
+                this.ball.y = this.paddle.y - this.ball.r - 1;
+                this.ball.dx = 0; 
+                this.ball.dy = 0;
+                this.ball.speed = CONFIG.BALL.BASE_SPEED;
+            }
+
+            launchBall() {
+                if (this.state === 'START') {
+                    audio.init();
+                    this.state = 'RUNNING';
+                    this.ball.dy = -this.ball.speed;
+                    this.ball.dx = (Math.random() - 0.5) * this.ball.speed;
+                }
+            }
+
+            setupInputs() {
+                canvas.addEventListener('mousemove', e => {
+                    const rect = canvas.getBoundingClientRect();
+                    const scaleX = this.width / rect.width;
+                    this.mouseX = (e.clientX - rect.left) * scaleX;
+                    this.isMouseMoved = true;
+                });
+                
+                canvas.addEventListener('click', () => this.launchBall());
+                
+                document.addEventListener('keydown', e => {
+                    this.keys[e.code] = true;
+                    this.isMouseMoved = false; // Вимикаємо мишу при використанні клавіш
+                    if (['Space', 'ArrowLeft', 'ArrowRight'].includes(e.code)) e.preventDefault();
+                    if (e.code === 'Space') this.launchBall();
+                    if (e.code === 'Escape') this.togglePause();
+                });
+                
+                document.addEventListener('keyup', e => this.keys[e.code] = false);
+            }
+
+            togglePause() {
+                if (this.state === 'RUNNING') this.state = 'PAUSED';
+                else if (this.state === 'PAUSED') this.state = 'RUNNING';
+            }
+
+            update(dt) {
+                if (this.state === 'PAUSED' || this.state === 'OVER' || this.state === 'VICTORY') return;
+
+                // Paddle Move
+                if (this.keys['ArrowLeft'] || this.keys['KeyA']) {
+                    this.paddle.x -= CONFIG.PADDLE.SPEED * dt;
+                } else if (this.keys['ArrowRight'] || this.keys['KeyD']) {
+                    this.paddle.x += CONFIG.PADDLE.SPEED * dt;
+                } else if (this.isMouseMoved) {
+                    this.paddle.x = this.mouseX - this.paddle.w / 2;
+                }
+                this.paddle.x = Math.max(0, Math.min(this.width - this.paddle.w, this.paddle.x));
+
+                if (this.state === 'START') {
+                    this.ball.x = this.paddle.x + this.paddle.w / 2;
+                    this.ball.y = this.paddle.y - this.ball.r - 1;
+                    return;
+                }
+
+                // Ball Move
+                this.ball.x += this.ball.dx * dt;
+                this.ball.y += this.ball.dy * dt;
+
+                // Wall Collisions
+                if (this.ball.x - this.ball.r < 0) {
+                    this.ball.x = this.ball.r; this.ball.dx *= -1; audio.play(300, 0.05);
+                } else if (this.ball.x + this.ball.r > this.width) {
+                    this.ball.x = this.width - this.ball.r; this.ball.dx *= -1; audio.play(300, 0.05);
+                }
+                
+                if (this.ball.y - this.ball.r < 0) {
+                    this.ball.y = this.ball.r; this.ball.dy *= -1; audio.play(300, 0.05);
+                }
+
+                // Paddle Collision
+                if (this.ball.y + this.ball.r >= this.paddle.y && 
+                    this.ball.y - this.ball.r <= this.paddle.y + this.paddle.h &&
+                    this.ball.x >= this.paddle.x && 
+                    this.ball.x <= this.paddle.x + this.paddle.w && 
+                    this.ball.dy > 0) {
+                    
+                    // Відскік залежно від місця влучання
+                    let hitPos = (this.ball.x - (this.paddle.x + this.paddle.w / 2)) / (this.paddle.w / 2);
+                    hitPos = Math.max(-0.95, Math.min(0.95, hitPos)); // Уникаємо 100% горизонтального польоту
+                    
+                    this.ball.dx = hitPos * this.ball.speed;
+                    this.ball.dy = -Math.sqrt(Math.max(0, this.ball.speed ** 2 - this.ball.dx ** 2));
+                    
+                    this.ball.y = this.paddle.y - this.ball.r - 1; // Виштовхуємо м'яч
+                    audio.play(200, 0.1, 'sine');
+                }
+
+                // Brick Collision
+                for (let brick of this.bricks) {
+                    if (!brick.active) continue;
+                    if (this.ball.x + this.ball.r > brick.x && this.ball.x - this.ball.r < brick.x + brick.w &&
+                        this.ball.y + this.ball.r > brick.y && this.ball.y - this.ball.r < brick.y + brick.h) {
+                        
+                        brick.active = false;
+                        this.ball.dy *= -1;
+                        this.score += CONFIG.BRICK.POINTS;
+                        this.ball.speed = Math.min(CONFIG.BALL.MAX_SPEED, this.ball.speed + CONFIG.BALL.SPEED_INC);
+                        audio.play(400, 0.05);
+                        for (let i = 0; i < CONFIG.PARTICLES.COUNT; i++) this.particles.push(new Particle(brick.x + brick.w / 2, brick.y + brick.h / 2, brick.color));
+                        break; // Лише одна цеглина за раз
+                    }
+                }
+
+                // Lose condition
+                if (this.ball.y > this.height) {
+                    this.lives--;
+                    audio.play(100, 0.3, 'sawtooth');
+                    if (this.lives <= 0) this.endGame('MISSION FAILED', 'text-red-500');
+                    else { this.state = 'START'; this.resetBall(); }
+                }
+
+                if (this.bricks.every(b => !b.active)) this.endGame('VICTORY!', 'text-green-400');
+
+                this.particles.forEach((p, i) => {
+                    p.update(dt);
+                    if (p.life <= 0) this.particles.splice(i, 1);
+                });
+
+                this.updateUI();
+            }
+
+            draw() {
+                ctx.clearRect(0, 0, this.width, this.height);
+                
+                // Paddle
+                ctx.fillStyle = CONFIG.PADDLE.COLOR;
+                ctx.fillRect(this.paddle.x, this.paddle.y, this.paddle.w, this.paddle.h);
+                
+                // Bricks
+                this.bricks.forEach(b => b.draw());
+                
+                // Ball
+                ctx.fillStyle = CONFIG.BALL.COLOR;
+                ctx.beginPath(); ctx.arc(this.ball.x, this.ball.y, this.ball.r, 0, Math.PI * 2); ctx.fill();
+                
+                // Particles
+                this.particles.forEach(p => p.draw());
+
+                if (this.state === 'PAUSED') {
+                    ctx.fillStyle = 'rgba(0,0,0,0.6)'; ctx.fillRect(0,0,this.width,this.height);
+                    ctx.fillStyle = '#fff'; ctx.font = '30px Orbitron'; ctx.textAlign = 'center';
+                    ctx.fillText('PAUSED', this.width / 2, this.height / 2);
+                }
+            }
+
+            endGame(title, titleClass) {
+                this.state = 'OVER';
+                if (this.score > this.highScore) {
+                    this.highScore = this.score;
+                    localStorage.setItem('arkanoidHighScore', this.score);
+                }
+                messageTitle.innerText = title;
+                messageTitle.className = `text-4xl font-game font-bold mb-4 uppercase ${titleClass}`;
+                messageScoreContainer.innerHTML = `Score: ${this.score}<br>Best: ${this.highScore}`;
+                messageOverlay.classList.remove('hidden');
+                this.updateUI();
+            }
+
+            updateUI() {
+                scoreEl.innerText = this.score;
+                livesEl.innerText = this.lives;
+                highScoreEl.innerText = this.highScore;
+            }
+        }
+
+        const game = new Game();
+        let lastTime = 0;
+        function loop(timestamp) {
+            const dt = timestamp - lastTime;
+            lastTime = timestamp;
+            if (dt < 100) { // Запобігаємо великим стрибкам при перемиканні вкладок
+                game.update(dt);
+                game.draw();
+            }
+            requestAnimationFrame(loop);
+        }
+        requestAnimationFrame(loop);
+
+        startBtn.onclick = () => { startScreen.classList.add('hidden'); game.launchBall(); };
+        restartBtn.onclick = () => { messageOverlay.classList.add('hidden'); game.reset(); };
+
+    </script>
+</body>
+</html>

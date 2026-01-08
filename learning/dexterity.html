@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <title>Mouse Dexterity | Click Accuracy Trainer - BITSTART.CLUB</title>
+    <meta name="description" content="Improve your clicking precision and reaction time. Practice left and right clicks in this interactive trainer. Optimized for BITSTART.CLUB.">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y48JGFP9V9"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+    
+      gtag('config', 'G-Y48JGFP9V9');
+    </script>  
+  
+    <style>
+        :root {
+            --primary-indigo: #6366f1;
+            --learning-blue: #3b82f6;
+            --success-green: #10b981;
+            --error-red: #ef4444;
+        }
+
+        body { font-family: 'Inter', sans-serif; background: #0f172a; color: #f3f4f6; overflow-x: hidden; }
+        .font-game { font-family: 'Orbitron', sans-serif; }
+        
+        .glass-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .neon-text { text-shadow: 0 0 10px rgba(99, 102, 241, 0.8); }
+        .neon-border { border: 2px solid var(--primary-indigo); box-shadow: 0 0 15px rgba(99, 102, 241, 0.3); }
+        .ad-placeholder { border: 1px dashed rgba(99, 102, 241, 0.3); background: rgba(15, 23, 42, 0.5); }
+        
+        .game-board {
+            position: relative;
+            width: 100%;
+            height: 500px;
+            background: #020617;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: inset 0 0 40px rgba(0,0,0,1);
+            cursor: crosshair;
+            transition: background-color 0.2s ease;
+        }
+
+        .flash-error { background-color: rgba(239, 68, 68, 0.15); }
+
+        .target {
+            position: absolute;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            font-size: 1.5rem;
+            color: white;
+            user-select: none;
+            z-index: 10;
+            transition: transform 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .target:active { transform: scale(0.9); }
+
+        .target-l { 
+            background: linear-gradient(135deg, var(--learning-blue), #1d4ed8); 
+            border: 3px solid #60a5fa; 
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.4); 
+        }
+        
+        .target-r { 
+            background: linear-gradient(135deg, #8b5cf6, #6d28d9); 
+            border: 3px solid #a78bfa; 
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.4); 
+        }
+
+        .timer-bar { height: 6px; background: #1e293b; border-radius: 3px; overflow: hidden; }
+        .timer-fill {
+            height: 100%;
+            background: linear-gradient(to right, var(--success-green), var(--primary-indigo));
+            width: 100%;
+            transition: width 0.1s linear;
+        }
+
+        .overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(2, 6, 23, 0.9);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        button.difficulty-btn.active { background: var(--primary-indigo); color: white; border-color: #818cf8; }
+        
+        .hit-effect {
+            position: absolute;
+            border-radius: 50%;
+            border: 2px solid var(--success-green);
+            pointer-events: none;
+            animation: ripple 0.4s ease-out forwards;
+        }
+
+        @keyframes ripple {
+            from { width: 40px; height: 40px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+            to { width: 120px; height: 120px; opacity: 0; transform: translate(-50%, -50%) scale(1.5); }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <header class="bg-[#0f172a]/80 border-b border-indigo-900/50 z-50 backdrop-blur-md">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <a href="../index.html" class="text-2xl md:text-3xl font-black font-game text-indigo-500 tracking-widest neon-text">BITSTART<span class="text-white">.CLUB</span></a>
+            <nav class="hidden md:flex space-x-8">
+                <a href="../index.html" class="text-sm font-bold uppercase hover:text-indigo-400 transition">Home</a>
+                <a href="../learning.html" class="text-sm font-bold uppercase text-indigo-400">Learning</a>
+                <a href="../classic.html" class="text-sm font-bold uppercase hover:text-indigo-400 transition">Classic</a>
+                <a href="../modern.html" class="text-sm font-bold uppercase hover:text-indigo-400 transition">Modern</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="flex-grow container mx-auto px-2 md:px-4 py-4">
+        <div class="flex flex-col lg:flex-row gap-6">
+            
+            <div class="flex-grow lg:w-3/4">
+                <div class="glass-card p-4 md:p-6 rounded-3xl neon-border relative mb-6">
+                    
+                    <div class="flex flex-wrap justify-between items-center gap-4 mb-6 font-game">
+                        <div class="flex gap-4">
+                            <div class="pill p-3 rounded-2xl text-center min-w-[80px] bg-slate-800/50 border border-white/5">
+                                <div class="text-[10px] text-gray-500 uppercase">Hits</div>
+                                <div id="score" class="text-xl font-black text-emerald-400">0</div>
+                            </div>
+                            <div class="pill p-3 rounded-2xl text-center min-w-[80px] bg-slate-800/50 border border-white/5">
+                                <div class="text-[10px] text-gray-500 uppercase">Misses</div>
+                                <div id="misses" class="text-xl font-black text-rose-400">0</div>
+                            </div>
+                        </div>
+                        
+                        <div id="diffSelector" class="flex p-1 bg-white/5 rounded-xl border border-white/10">
+                            <button data-diff="easy" class="difficulty-btn px-4 py-1 text-[10px] uppercase rounded-lg transition-colors">Easy</button>
+                            <button data-diff="medium" class="difficulty-btn px-4 py-1 text-[10px] uppercase rounded-lg active transition-colors">Medium</button>
+                            <button data-diff="hard" class="difficulty-btn px-4 py-1 text-[10px] uppercase rounded-lg transition-colors">Hard</button>
+                        </div>
+                    </div>
+
+                    <div class="timer-bar mb-4">
+                        <div id="timerFill" class="timer-fill"></div>
+                    </div>
+
+                    <div id="gameBoard" class="game-board border border-white/5">
+                        <div id="startScreen" class="overlay">
+                            <i class="fa-solid fa-mouse text-6xl text-indigo-500 mb-6"></i>
+                            <h2 class="text-3xl font-game font-bold text-white mb-2 uppercase tracking-tighter">Mouse Dexterity</h2>
+                            <p class="text-gray-400 mb-8 max-w-sm text-sm">Target <span class="text-blue-400 font-bold underline">L</span>: Left Click<br>Target <span class="text-violet-400 font-bold underline">R</span>: Right Click</p>
+                            <button id="startBtn" class="bg-indigo-600 text-white font-game font-bold px-12 py-4 rounded-2xl hover:bg-indigo-500 transition active:scale-95 uppercase tracking-widest shadow-lg shadow-indigo-500/20">Start Session</button>
+                        </div>
+
+                        <div id="resultModal" class="overlay hidden">
+                            <h2 class="text-3xl font-game font-bold text-white mb-6 uppercase">Evaluation Complete</h2>
+                            <div class="grid grid-cols-2 gap-4 mb-8 w-full max-w-xs">
+                                <div class="bg-white/5 p-4 rounded-2xl border border-white/10">
+                                    <div class="text-[10px] text-gray-500 uppercase">Precision</div>
+                                    <div id="resAccuracy" class="text-xl font-bold">0%</div>
+                                </div>
+                                <div class="bg-white/5 p-4 rounded-2xl border border-white/10">
+                                    <div class="text-[10px] text-gray-500 uppercase">Successful Hits</div>
+                                    <div id="resHits" class="text-xl font-bold text-emerald-400">0</div>
+                                </div>
+                            </div>
+                            <button id="restartBtn" class="bg-white text-black font-game font-bold px-12 py-4 rounded-2xl hover:bg-gray-200 transition uppercase tracking-widest">Restart Training</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-card p-6 md:p-8 rounded-3xl border border-white/5">
+                    <h2 class="text-xl font-game font-bold text-indigo-400 mb-6 uppercase tracking-wider">The Engineering of the Click</h2>
+                    <div class="space-y-4 text-gray-300 leading-relaxed text-sm">
+                        <p>The computer mouse was famously conceptualized by <strong>Douglas Engelbart</strong> in 1964 as a "X-Y Position Indicator for a Display System." The standard two-button layout we use today was later pioneered by <strong>Xerox PARC</strong> in the early 1970s. While single-button designs were initially favored for their simplicity, the multi-button model became the industry standard for professional productivity and complex digital interactions.</p>
+                        <p>Technically, a "click" represents a sophisticated feedback loop. It involves a mechanical microswitch (often using gold-plated contacts), an operating system event handler, and the user's tactile and auditory perception. High-quality modern switches are rated for up to <strong>80 million operations</strong>, providing consistent resistance and nearly instantaneous reset times to allow for rapid-fire input.</p>
+                        <div class="bg-indigo-500/10 p-4 rounded-xl border-l-4 border-indigo-500 my-4">
+                            <p class="italic text-xs text-gray-400">Professional Insight: In high-stakes environments like surgical robotics, real-time strategy games, or CAD architecture, clicking precision and reaction timing are critical performance metrics.</p>
+                        </div>
+                        <p>Beyond simple selection, the differentiation between left and right clicks forms the basis of "Contextual Interaction"—allowing the user to separate primary actions (selection/execution) from secondary actions (options/properties), effectively doubling the control surface available to a single hand.</p>
+                    </div>
+                </div>
+            </div>
+
+            <aside class="w-full lg:w-1/4 space-y-6">
+                <div class="ad-placeholder h-48 flex items-center justify-center rounded-3xl text-[10px] uppercase tracking-widest text-indigo-800 font-bold text-center p-4">Precision Hub Advertisement</div>
+
+                <div class="glass-card p-6 rounded-3xl border border-indigo-900/50">
+                    <h3 class="font-game text-xs font-bold text-indigo-400 mb-4 uppercase">Educational Value</h3>
+                    <ul class="space-y-4 text-[11px] text-gray-400">
+                        <li><strong class="text-gray-200 block mb-1">Motor Control:</strong> Training the index and middle fingers for independent reaction and high-frequency movement.</li>
+                        <li><strong class="text-gray-200 block mb-1">Neural Differentiation:</strong> Strengthening the neural distinction between primary (left) and secondary (right) motor triggers.</li>
+                        <li><strong class="text-gray-200 block mb-1">Predictive Reflex:</strong> Reducing the latency between visual stimuli and mechanical response through repetitive spatial challenges.</li>
+                        <li><strong class="text-gray-200 block mb-1">Proprioception:</strong> Improving the user's awareness of hand position and pressure relative to on-screen digital boundaries.</li>
+                    </ul>
+                </div>
+
+                <div class="ad-placeholder h-64 flex items-center justify-center rounded-3xl text-[10px] uppercase tracking-widest text-indigo-900 font-bold">Square Ad Space</div>
+            </aside>
+        </div>
+    </main>
+
+    <footer class="bg-[#0f172a] border-t border-indigo-900/50 py-8 mt-12">
+        <div class="container mx-auto px-4 text-center">
+            <p class="text-[9px] text-gray-800 uppercase tracking-[0.3em]">© 2026 BITSTART.CLUB • THE NO-DATA ZONE</p>
+        </div>
+    </footer>
+
+    <script>
+        'use strict';
+
+        class MouseTrainer {
+            constructor() {
+                this.score = 0;
+                this.misses = 0;
+                this.running = false;
+                this.difficulty = 'medium';
+                this.spawnTimer = null;
+                this.gameDuration = 30000; 
+                this.startTime = 0;
+
+                this.configs = {
+                    easy: { spawnRate: 1600, targetLife: 2800 },
+                    medium: { spawnRate: 1100, targetLife: 1800 },
+                    hard: { spawnRate: 750, targetLife: 1100 }
+                };
+
+                this.audioCtx = null;
+                this.initElements();
+                this.initEvents();
+            }
+
+            initElements() {
+                this.board = document.getElementById('gameBoard');
+                this.scoreEl = document.getElementById('score');
+                this.missesEl = document.getElementById('misses');
+                this.timerFill = document.getElementById('timerFill');
+                this.startScreen = document.getElementById('startScreen');
+                this.resultModal = document.getElementById('resultModal');
+            }
+
+            initEvents() {
+                document.getElementById('startBtn').onclick = () => this.start();
+                document.getElementById('restartBtn').onclick = () => this.start();
+                
+                document.querySelectorAll('.difficulty-btn').forEach(btn => {
+                    btn.onclick = (e) => {
+                        document.querySelectorAll('.difficulty-btn').forEach(b => b.classList.remove('active'));
+                        e.target.classList.add('active');
+                        this.difficulty = e.target.dataset.diff;
+                    };
+                });
+
+                this.board.oncontextmenu = (e) => {
+                    if (this.running) e.preventDefault();
+                };
+
+                this.board.onmousedown = (e) => {
+                    if (!this.running) return;
+                    if (e.target === this.board) {
+                        this.handleMiss();
+                    }
+                };
+            }
+
+            initAudio() {
+                if (!this.audioCtx) this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+
+            playSound(freq, type = 'sine', dur = 0.1, vol = 0.05) {
+                if (!this.audioCtx) return;
+                const osc = this.audioCtx.createOscillator();
+                const gain = this.audioCtx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, this.audioCtx.currentTime);
+                gain.gain.setValueAtTime(vol, this.audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, this.audioCtx.currentTime + dur);
+                osc.connect(gain); gain.connect(this.audioCtx.destination);
+                osc.start(); osc.stop(this.audioCtx.currentTime + dur);
+            }
+
+            handleMiss() {
+                this.misses++;
+                this.playSound(120, 'square', 0.2, 0.08); 
+                this.board.classList.add('flash-error'); 
+                setTimeout(() => this.board.classList.remove('flash-error'), 150);
+                this.updateUI();
+            }
+
+            createHitEffect(x, y) {
+                const ripple = document.createElement('div');
+                ripple.className = 'hit-effect';
+                ripple.style.left = x + 'px';
+                ripple.style.top = y + 'px';
+                this.board.appendChild(ripple);
+                setTimeout(() => ripple.remove(), 400);
+            }
+
+            start() {
+                this.initAudio();
+                this.score = 0;
+                this.misses = 0;
+                this.running = true;
+                this.startScreen.classList.add('hidden');
+                this.resultModal.classList.add('hidden');
+                this.startTime = Date.now();
+                this.updateUI();
+                this.gameLoop();
+                this.spawnLoop();
+            }
+
+            gameLoop() {
+                if (!this.running) return;
+                const elapsed = Date.now() - this.startTime;
+                const remaining = Math.max(0, 100 - (elapsed / this.gameDuration) * 100);
+                this.timerFill.style.width = remaining + '%';
+
+                if (remaining <= 0) this.stop();
+                else requestAnimationFrame(() => this.gameLoop());
+            }
+
+            spawnLoop() {
+                if (!this.running) return;
+                this.spawnTarget();
+                this.spawnTimer = setTimeout(() => this.spawnLoop(), this.configs[this.difficulty].spawnRate);
+            }
+
+            spawnTarget() {
+                const target = document.createElement('div');
+                const isLeft = Math.random() > 0.45;
+                target.className = `target ${isLeft ? 'target-l' : 'target-r'}`;
+                target.innerText = isLeft ? 'L' : 'R';
+                
+                const maxX = this.board.clientWidth - 80;
+                const maxY = this.board.clientHeight - 80;
+                target.style.left = Math.random() * maxX + 40 + 'px';
+                target.style.top = Math.random() * maxY + 40 + 'px';
+
+                target.onmousedown = (e) => {
+                    e.stopPropagation();
+                    const isCorrect = (isLeft && e.button === 0) || (!isLeft && e.button === 2);
+                    
+                    if (isCorrect) {
+                        this.score++;
+                        this.playSound(700, 'sine', 0.1); 
+                        this.createHitEffect(parseInt(target.style.left), parseInt(target.style.top));
+                        target.remove();
+                    } else {
+                        this.handleMiss();
+                    }
+                    this.updateUI();
+                };
+
+                this.board.appendChild(target);
+
+                setTimeout(() => {
+                    if (target.parentNode) {
+                        target.remove();
+                        if (this.running) this.handleMiss();
+                    }
+                }, this.configs[this.difficulty].targetLife);
+            }
+
+            stop() {
+                this.running = false;
+                clearTimeout(this.spawnTimer);
+                this.board.querySelectorAll('.target').forEach(t => t.remove());
+                this.showResult();
+            }
+
+            updateUI() {
+                this.scoreEl.innerText = this.score;
+                this.missesEl.innerText = this.misses;
+            }
+
+            showResult() {
+                const total = this.score + this.misses;
+                const acc = total > 0 ? Math.round((this.score / total) * 100) : 0;
+                document.getElementById('resAccuracy').innerText = acc + '%';
+                document.getElementById('resHits').innerText = this.score;
+                this.resultModal.classList.remove('hidden');
+                this.playSound(440, 'sine', 0.5, 0.1);
+            }
+        }
+
+        window.onload = () => new MouseTrainer();
+    </script>
+</body>
+</html>

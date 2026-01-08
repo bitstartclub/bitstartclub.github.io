@@ -3,10 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Neon Wave | Modern Arcade - BITSTART.CLUB</title>
+    
+    <!-- SEO Meta Tags -->
+    <title>Neon Wave | Modern Arcade & Cybernetics - BITSTART.CLUB</title>
+    <meta name="description" content="Master the flow in Neon Wave. A high-speed procedural arcade experience. No registration, pure performance at BITSTART.CLUB.">
+    <meta name="keywords" content="neon wave, arcade game, cyberwave, rhythm game, procedural game, bitstart club">
+    <link rel="canonical" href="https://bitstart.club/modern/wave.html">
     
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@400;600&display=swap" rel="stylesheet">
 
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y48JGFP9V9"></script>
@@ -17,72 +22,47 @@
     
       gtag('config', 'G-Y48JGFP9V9');
     </script>  
-  
+
     <style>
         :root {
             --modern-pink: #ec4899;
             --bg-deep: #050010;
-            --neon-glow: rgba(236, 72, 153, 0.4);
         }
 
-        body { 
-            background-color: var(--bg-deep); 
-            color: #fff; 
-            font-family: 'Inter', sans-serif;
-            overflow-x: hidden;
-        }
-
+        body { font-family: 'Inter', sans-serif; background: #0b0f1a; color: #f3f4f6; overflow-x: hidden; }
         .font-game { font-family: 'Orbitron', sans-serif; }
-
-        /* Modern UI Tokens */
-        .glass-card {
-            background: rgba(15, 23, 42, 0.6);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(236, 72, 153, 0.2);
-            box-shadow: 0 0 20px rgba(236, 72, 153, 0.1);
-        }
-
-        .neon-text { text-shadow: 0 0 10px var(--modern-pink); }
-        .neon-border { border: 2px solid var(--modern-pink); box-shadow: 0 0 15px var(--neon-glow); }
-
-        .game-container {
+        .glass-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .neon-text { text-shadow: 0 0 10px rgba(236, 72, 153, 0.8); }
+        .neon-border { border: 2px solid var(--modern-pink); box-shadow: 0 0 15px rgba(236, 72, 153, 0.4); }
+        .ad-placeholder { border: 1px dashed rgba(236, 72, 153, 0.3); background: rgba(15, 23, 42, 0.5); }
+        
+        .game-wrapper {
             position: relative;
             width: 100%;
-            height: 60vh;
+            max-width: 800px;
+            margin: 0 auto;
+            aspect-ratio: 16 / 9;
             background: #000;
-            border-radius: 1rem;
+            border-radius: 12px;
             overflow: hidden;
-            touch-action: none;
         }
 
         canvas {
-            display: block;
             width: 100%;
             height: 100%;
+            display: block;
+            touch-action: none;
         }
 
         .scanlines {
             position: absolute;
             inset: 0;
-            background: linear-gradient(to bottom, transparent 50%, rgba(236, 72, 153, 0.02) 50%);
+            background: linear-gradient(to bottom, transparent 50%, rgba(236, 72, 153, 0.03) 50%);
             background-size: 100% 4px;
             pointer-events: none;
             z-index: 5;
         }
 
-        .ad-placeholder {
-            border: 1px dashed rgba(236, 72, 153, 0.2);
-            background: rgba(236, 72, 153, 0.03);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.6rem;
-            text-transform: uppercase;
-            letter-spacing: 0.1rem;
-            color: rgba(236, 72, 153, 0.4);
-        }
-
-        /* Overlay Styles */
         .game-overlay {
             position: absolute;
             inset: 0;
@@ -90,135 +70,144 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            background: rgba(5, 0, 16, 0.95);
-            z-index: 50;
-            transition: opacity 0.3s;
+            background: rgba(5, 0, 16, 0.9);
+            z-index: 100;
+            text-align: center;
         }
 
-        .btn-modern {
-            background: transparent;
-            border: 2px solid var(--modern-pink);
-            color: var(--modern-pink);
-            padding: 0.75rem 2.5rem;
-            font-family: 'Orbitron', sans-serif;
-            text-transform: uppercase;
-            font-weight: 900;
-            letter-spacing: 2px;
-            transition: all 0.2s;
-            box-shadow: 0 0 10px rgba(236, 72, 153, 0.2);
-        }
-
-        .btn-modern:hover {
-            background: var(--modern-pink);
-            color: #000;
-            box-shadow: 0 0 25px var(--modern-pink);
+        @media (max-height: 850px) {
+            .history-section { margin-top: 1.5rem; }
+            .main-content { padding-top: 0.5rem; }
         }
     </style>
 </head>
 <body class="flex flex-col min-h-screen">
 
-    <!-- Header -->
-    <header class="bg-[#0f172a]/80 border-b border-pink-900/50 z-50 backdrop-blur-md">
+    <header class="bg-[#0f172a]/80 border-b border-indigo-900/50 z-50 backdrop-blur-md header-nav">
         <div class="container mx-auto px-4 py-3 flex justify-between items-center">
-            <a href="../index.html" class="text-2xl md:text-3xl font-black font-game text-[#ec4899] tracking-widest neon-text">BITSTART<span class="text-white">.CLUB</span></a>
+            <a class='text-2xl md:text-3xl font-black font-game text-indigo-500 tracking-widest neon-text' href='/'>BITSTART<span class="text-white">.CLUB</span></a>
             <nav class="hidden md:flex space-x-8">
-                <a href="../index.html" class="text-sm font-bold uppercase hover:text-[#ec4899] transition">Home</a>
-                <a href="../learning.html" class="text-sm font-bold uppercase hover:text-[#ec4899] transition">Learning</a>
-                <a href="../classic.html" class="text-sm font-bold uppercase hover:text-[#ec4899] transition">Classic</a>
-                <a href="../modern.html" class="text-sm font-bold uppercase text-[#ec4899]">Modern</a>
+                <a class='text-sm font-bold uppercase hover:text-indigo-400 transition' href='/'>Home</a>
+                <a class='text-sm font-bold uppercase hover:text-indigo-400 transition' href='/learning'>Learning</a>
+                <a class='text-sm font-bold uppercase text-green-400' href='/classic'>Classic</a>
+                <a class='text-sm font-bold uppercase hover:text-indigo-400 transition' href='/modern'>Modern</a>
             </nav>
         </div>
     </header>
 
-    <main class="flex-grow container mx-auto px-4 py-8">
-        <div class="flex flex-col lg:flex-row gap-8">
+    <main class="flex-grow container mx-auto px-2 md:px-4 py-4 main-content">
+        <div class="flex flex-col lg:flex-row gap-6">
             
-            <!-- Game Section -->
-            <div class="lg:w-3/4 flex flex-col gap-6">
-                <div class="glass-card p-6 rounded-3xl neon-border relative">
-                    <div class="flex justify-between items-center mb-4">
-                        <div class="font-game text-xs text-[#ec4899] uppercase tracking-widest">System: Online</div>
-                        <div id="progress-text" class="font-game text-lg text-white neon-text">PROGRESS: 0%</div>
+            <div class="flex-grow">
+                <div class="glass-card p-3 md:p-6 rounded-3xl neon-border relative mb-6">
+                    
+                    <div class="flex justify-around mb-4 font-game">
+                        <div class="text-center">
+                            <div class="text-[10px] text-gray-500 uppercase tracking-tighter">Sync Progress</div>
+                            <div class="text-3xl md:text-4xl font-black text-[#ec4899]" id="scoreDisplay">0%</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-[10px] text-gray-500 uppercase tracking-tighter">Best Sync</div>
+                            <div class="text-3xl md:text-4xl font-black text-indigo-400" id="bestScoreDisplay">0%</div>
+                        </div>
                     </div>
 
-                    <div class="game-container">
+                    <div class="game-wrapper border border-white/5">
                         <div class="scanlines"></div>
                         <canvas id="gameCanvas"></canvas>
-
-                        <!-- Start Overlay -->
-                        <div id="startOverlay" class="game-overlay">
-                            <h2 class="text-4xl md:text-6xl font-game font-black text-[#ec4899] mb-4 neon-text uppercase">Neon Wave</h2>
-                            <p class="text-gray-400 mb-8 font-light tracking-widest uppercase text-xs">Hold to Ascend • Release to Descend</p>
-                            <button id="startBtn" class="btn-modern">Initialize</button>
+                        
+                        <div id="startOverlay" class="game-overlay p-6">
+                            <h2 class="text-4xl font-game font-black text-[#ec4899] mb-2 uppercase neon-text">Neon Wave</h2>
+                            <p class="text-gray-400 text-xs mb-8 uppercase tracking-widest">Hold to Ascend • Release to Descend</p>
+                            <button id="startBtn" class="bg-pink-600 hover:bg-pink-500 text-white font-game font-bold px-10 py-3 rounded-2xl transition uppercase shadow-lg shadow-pink-500/20">Initialize</button>
                         </div>
 
-                        <!-- Game Over Overlay -->
-                        <div id="endOverlay" class="game-overlay hidden">
-                            <h2 id="endTitle" class="text-4xl font-game font-black text-[#ec4899] mb-4 uppercase">System Crash</h2>
-                            <p id="endStats" class="text-white mb-8 font-game text-sm uppercase tracking-wider"></p>
-                            <button id="restartBtn" class="btn-modern">Reboot</button>
+                        <div id="endOverlay" class="game-overlay p-6 hidden">
+                            <h2 id="endTitle" class="text-3xl font-game font-bold text-[#ec4899] mb-2 uppercase">System Crash</h2>
+                            <p id="endStats" class="text-white mb-8 font-bold uppercase text-sm"></p>
+                            <button id="restartBtn" class="bg-white text-black font-game font-bold px-10 py-3 rounded-2xl hover:bg-pink-400 transition uppercase">Reboot</button>
                         </div>
                     </div>
+
+                    <p class="mt-4 text-[10px] text-gray-500 uppercase tracking-widest text-center">
+                        Spacebar or Touch to Control Buoyancy<br>
+                        Navigate the neural corridors
+                    </p>
                 </div>
 
-                <!-- Technical/General Info Block -->
-                <div class="glass-card p-8 rounded-3xl border border-white/5">
-                    <h3 class="font-game text-xl text-[#ec4899] mb-4 uppercase">Modern Arcade Games</h3>
-                    <div class="space-y-4 text-sm text-gray-400 leading-relaxed">
-                        <p><strong>Neon Wave</strong> belongs to the genre of high-speed reaction arcade games. These games emphasize rhythm, spatial awareness, and the ability to maintain flow under increasing difficulty. Unlike classic arcades, modern versions utilize procedural generation to ensure every session presents a unique topographical challenge.</p>
-                        <p>Movement in these environments is often governed by simple physics-based rules—such as buoyancy or gravity—requiring players to master momentum rather than just simple directional input. The aesthetic is heavily influenced by vaporwave and cyberpunk cultures, where visual feedback is as important as the mechanics themselves.</p>
+                <div class="glass-card p-6 md:p-8 rounded-3xl border border-white/5 history-section">
+                    <h2 class="text-xl md:text-2xl font-game font-bold text-indigo-400 mb-6 uppercase tracking-wider">The Mechanics of Flow</h2>
+                    <div class="space-y-4 text-gray-300 leading-relaxed text-sm">
+                        <p>
+                            <strong>Neon Wave</strong> belongs to the high-velocity "one-button" arcade sub-genre, where complex movement is derived from a single input variable. This specific design philosophy emphasizes <em>proprioception</em>—the intuitive sense of your digital avatar's position and momentum.
+                        </p>
+                        <p>
+                            Unlike traditional platformers with rigid gravity, Neon Wave utilizes a buoyancy-based physics model. Procedural generation ensures that the map is constructed mathematically as you play, meaning no two flight paths are identical. This requires the player to react to raw visual data rather than memorizing fixed patterns.
+                        </p>
+                        <div class="bg-black/30 p-4 rounded-xl border-l-4 border-pink-500 my-4">
+                            <p class="italic text-xs text-gray-400 text-justify">
+                                Tech Insight: The corridors are generated using a shifting ceiling/floor algorithm that maintains a minimum navigable height, ensuring the trial is difficult but never impossible.
+                            </p>
+                        </div>
+                        <p>
+                            At BITSTART.CLUB, we’ve optimized the physics engine for zero-latency response, allowing you to enter the "flow state" where movement becomes a reflex rather than a conscious decision.
+                        </p>
                     </div>
                 </div>
             </div>
 
-            <!-- Sidebar -->
-            <aside class="lg:w-1/4 flex flex-col gap-6">
-                <!-- Ad Banner Block -->
-                <div class="ad-placeholder h-48 rounded-3xl">
-                    <div class="text-center p-4">
-                        <p class="font-game text-[10px] mb-2 text-[#ec4899]">Cybernetic Promotion</p>
-                        <p class="text-[9px] text-gray-500">Premium Hardware for High-Speed Neural Navigation</p>
-                    </div>
+            <aside class="w-full lg:w-1/4 space-y-6">
+                <div class="ad-placeholder h-40 flex items-center justify-center rounded-3xl">
+                    <span class="text-pink-900 font-bold uppercase tracking-widest text-[10px]">Top Sidebar Ad</span>
                 </div>
-                
-                <!-- Educational Value Block -->
-                <div class="glass-card p-6 rounded-3xl border border-white/5">
-                    <h4 class="font-game text-xs text-[#ec4899] mb-4 uppercase tracking-widest">Cognitive Benefits</h4>
-                    <ul class="space-y-4 text-[11px] text-gray-400 uppercase leading-normal">
-                        <li>
-                            <span class="text-white block mb-1">Neural Plasticity</span>
-                            Improving the brain's ability to process visual information and execute motor responses simultaneously.
-                        </li>
-                        <li>
-                            <span class="text-white block mb-1">Focus & Flow</span>
-                            Training the mind to enter a "flow state," which enhances concentration and reduces perceived mental fatigue.
-                        </li>
-                        <li>
-                            <span class="text-white block mb-1">Spatial Reaction</span>
-                            Enhancing hand-eye coordination by navigating narrow corridors at high velocities.
-                        </li>
+
+                <div class="glass-card p-6 rounded-3xl border border-pink-900/50">
+                    <h3 class="font-game text-xs font-bold text-[#ec4899] mb-4 uppercase">Modern Library</h3>
+                    <ul class="space-y-3 text-sm">
+                        <li class="flex items-center gap-2 text-[#ec4899] font-bold"><div class="w-1.5 h-1.5 rounded-full bg-pink-500"></div> Neon Wave</li>
+                        <li><a class='hover:text-pink-400 transition' href='#'>Vector Dash</a></li>
+                        <li><a href="#" class="text-gray-600 cursor-not-allowed">Neural Runner</a></li>
                     </ul>
                 </div>
 
-                <div class="ad-placeholder h-64 rounded-3xl">ADVERTISING BLOCK</div>
+                <div class="glass-card p-6 rounded-3xl border border-indigo-900/50">
+                    <h4 class="text-xs font-bold uppercase text-indigo-400 mb-2">Cognitive Value</h4>
+                    <p class="text-[10px] text-gray-500 leading-tight">
+                        Neon Wave enhances visual processing speed and spatial reaction time. It trains the cerebellum to calculate physics trajectories in real-time under high-stress conditions.
+                    </p>
+                </div>
+
+                <div class="ad-placeholder h-64 flex items-center justify-center rounded-3xl">
+                    <span class="text-pink-900 font-bold uppercase tracking-widest text-[10px]">Square Ad Unit</span>
+                </div>
             </aside>
         </div>
     </main>
 
-    <footer class="bg-[#050010] border-t border-pink-900/20 py-8 mt-12">
+    <footer class="bg-[#0f172a] border-t border-indigo-900/50 py-8 mt-12">
         <div class="container mx-auto px-4 text-center">
-            <p class="text-[10px] text-gray-600 uppercase tracking-[0.4em]">© 2026 BITSTART.CLUB • MODERN ARCADE DIVISION</p>
+            <div class="flex justify-center space-x-6 md:space-x-8 text-[9px] font-bold uppercase tracking-widest text-gray-500 mb-6">
+                <a class='hover:text-green-400 transition' href='/privacy'>Privacy</a>
+                <a class='hover:text-green-400 transition' href='/terms'>Terms</a>
+                <a href="../contact.html" class="hover:text-green-400 transition">Support</a>
+            </div>
+            <p class="text-[9px] text-gray-800 uppercase tracking-[0.3em]">© 2026 BITSTART.CLUB • THE NO-DATA ZONE</p>
         </div>
     </footer>
 
     <script>
+        /**
+         * BITSTART.CLUB - Neon Wave Engine
+         * Optimized for zero-latency performance.
+         */
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
         const startOverlay = document.getElementById('startOverlay');
         const endOverlay = document.getElementById('endOverlay');
-        const progressDisplay = document.getElementById('progress-text');
+        const scoreDisplay = document.getElementById('scoreDisplay');
+        const bestScoreDisplay = document.getElementById('bestScoreDisplay');
 
-        // Audio System
+        // Аудіосистема на базі Web Audio API
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         const Sound = {
             play(freq, type, dur, vol = 0.05) {
@@ -241,32 +230,39 @@
             SPEED_X: 7,
             SPEED_Y: 7,
             LEVEL_HEIGHT: 20,
-            LEVEL_LENGTH: 1200,
+            LEVEL_LENGTH: 1500,
             TRAIL_MAX: 15
         };
 
         const TILE = { EMPTY: 0, BLOCK: 1, SPIKE_UP: 2, SPIKE_DOWN: 3, FINISH: 9 };
+        
+        // Глобальні стани
         let levelMap = [];
-        let player, camera, gameState, frame;
+        let player = null; 
+        let camera = { x: 0, y: 0 };
+        let gameState = 'MENU';
+        let frame = 0;
+        let bestScore = localStorage.getItem('waveBestScore') || 0;
+        bestScoreDisplay.innerText = `${bestScore}%`;
 
+        // Функція генерації рівня з безперервним коридором
         function generateLevel() {
-            // Re-initializing full map
             levelMap = Array.from({ length: CONFIG.LEVEL_LENGTH }, () => new Array(CONFIG.LEVEL_HEIGHT).fill(TILE.EMPTY));
             let currentCeil = 4;
             let currentFloor = 16;
 
             for (let x = 0; x < CONFIG.LEVEL_LENGTH; x++) {
-                // Fixed outer walls
+                // Зовнішні межі
                 levelMap[x][0] = TILE.BLOCK;
                 levelMap[x][CONFIG.LEVEL_HEIGHT - 1] = TILE.BLOCK;
 
                 if (x > 30 && x < CONFIG.LEVEL_LENGTH - 40) {
                     const diff = x / CONFIG.LEVEL_LENGTH;
-                    const tunnelH = Math.max(5, Math.floor(11 - diff * 5));
+                    const tunnelH = Math.max(5, Math.floor(11 - diff * 6));
                     
-                    // Continuously update ceiling and floor for every x to ensure no gaps
-                    if (x % 4 === 0) {
-                        currentCeil += Math.floor((Math.random() - 0.5) * 3);
+                    // Оновлення меж коридору кожні 5 блоків, але заповнення кожного x
+                    if (x % 5 === 0) {
+                        currentCeil += Math.floor((Math.random() - 0.5) * 4);
                         currentCeil = Math.max(1, Math.min(CONFIG.LEVEL_HEIGHT - tunnelH - 2, currentCeil));
                         currentFloor = currentCeil + tunnelH;
                     }
@@ -277,46 +273,51 @@
                         }
                     }
 
-                    // Periodic Spikes
+                    // Генерація шипів
                     if (x % 20 === 0 && Math.random() < 0.2 + diff * 0.4) {
                         if (Math.random() > 0.5) levelMap[x][currentFloor] = TILE.SPIKE_UP;
                         else levelMap[x][currentCeil - 1] = TILE.SPIKE_DOWN;
                     }
                 }
 
+                // Фінішна зона
                 if (x >= CONFIG.LEVEL_LENGTH - 15) {
                     for (let y = 1; y < CONFIG.LEVEL_HEIGHT - 1; y++) levelMap[x][y] = TILE.FINISH;
                 }
             }
         }
 
-        function init() {
-            resize();
-            gameState = 'MENU';
-            frame = 0;
-            player = { x: 200, y: 0, dy: 0, trail: [], input: false };
-            camera = { x: 0, y: 0 };
-            generateLevel();
-            requestAnimationFrame(loop);
+        function initCanvas() {
+            const wrapper = canvas.parentElement;
+            if (wrapper) {
+                canvas.width = wrapper.clientWidth;
+                canvas.height = wrapper.clientHeight;
+            }
         }
 
-        function resize() {
-            canvas.width = canvas.parentElement.clientWidth;
-            canvas.height = canvas.parentElement.clientHeight;
+        // Ініціалізація гравця перед стартом циклу
+        function resetGameState() {
+            player = { 
+                x: 200, 
+                y: (CONFIG.LEVEL_HEIGHT / 2) * CONFIG.TILE_SIZE, 
+                dy: 0, 
+                trail: [], 
+                input: false 
+            };
+            camera = { x: 0, y: 0 };
         }
 
         function startGame() {
-            player.x = 200;
-            player.y = (CONFIG.LEVEL_HEIGHT / 2) * CONFIG.TILE_SIZE;
-            player.trail = [];
+            resetGameState();
             gameState = 'PLAYING';
             startOverlay.classList.add('hidden');
             endOverlay.classList.add('hidden');
+            generateLevel();
             Sound.play(440, 'sine', 0.5);
         }
 
         function update() {
-            if (gameState !== 'PLAYING') return;
+            if (gameState !== 'PLAYING' || !player) return;
 
             player.x += CONFIG.SPEED_X;
             player.dy = player.input ? -CONFIG.SPEED_Y : CONFIG.SPEED_Y;
@@ -328,13 +329,6 @@
             camera.x = player.x - 200;
             camera.y += (player.y - canvas.height / 2 - camera.y) * 0.1;
 
-            checkCollisions();
-            
-            const prog = Math.floor((player.x / (CONFIG.LEVEL_LENGTH * CONFIG.TILE_SIZE)) * 100);
-            progressDisplay.innerText = `PROGRESS: ${Math.min(100, prog)}%`;
-        }
-
-        function checkCollisions() {
             const tx = Math.floor(player.x / CONFIG.TILE_SIZE);
             const ty = Math.floor(player.y / CONFIG.TILE_SIZE);
 
@@ -343,49 +337,64 @@
             const tile = levelMap[tx] ? levelMap[tx][ty] : TILE.EMPTY;
             if (tile === TILE.BLOCK || tile === TILE.SPIKE_UP || tile === TILE.SPIKE_DOWN) die();
             if (tile === TILE.FINISH) win();
+
+            const prog = Math.floor((player.x / (CONFIG.LEVEL_LENGTH * CONFIG.TILE_SIZE)) * 100);
+            scoreDisplay.innerText = `${Math.min(100, prog)}%`;
         }
 
         function die() {
             gameState = 'OVER';
             Sound.play(100, 'sawtooth', 0.4, 0.1);
-            document.getElementById('endTitle').innerText = "SYSTEM CRASH";
-            document.getElementById('endTitle').style.color = "#ec4899";
-            document.getElementById('endStats').innerText = `Distance: ${Math.floor(player.x / 10)}m`;
+            const currentProg = parseInt(scoreDisplay.innerText);
+            if (currentProg > bestScore) {
+                bestScore = currentProg;
+                localStorage.setItem('waveBestScore', bestScore);
+                bestScoreDisplay.innerText = `${bestScore}%`;
+            }
+            document.getElementById('endStats').innerText = `Sync Lost at ${currentProg}%`;
             endOverlay.classList.remove('hidden');
         }
 
         function win() {
             gameState = 'OVER';
             Sound.play(880, 'sine', 0.5, 0.1);
-            document.getElementById('endTitle').innerText = "MISSION COMPLETE";
-            document.getElementById('endTitle').style.color = "#ec4899";
-            document.getElementById('endStats').innerText = "Network hijacked. Access granted.";
+            scoreDisplay.innerText = "100%";
+            localStorage.setItem('waveBestScore', 100);
+            bestScoreDisplay.innerText = "100%";
+            document.getElementById('endTitle').innerText = "System Breached";
+            document.getElementById('endStats').innerText = "Encryption fully bypassed.";
             endOverlay.classList.remove('hidden');
         }
 
         function draw() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Захист від малювання без ініціалізації
+            if (!player) return;
+
             ctx.save();
             ctx.translate(-camera.x, -camera.y);
 
             const startX = Math.floor(camera.x / CONFIG.TILE_SIZE);
             const endX = startX + Math.ceil(canvas.width / CONFIG.TILE_SIZE) + 2;
 
+            // Малювання оточення
             for (let x = startX; x < endX; x++) {
                 if (!levelMap[x]) continue;
                 for (let y = 0; y < CONFIG.LEVEL_HEIGHT; y++) {
                     const tile = levelMap[x][y];
                     if (tile === TILE.EMPTY) continue;
-                    
                     const px = x * CONFIG.TILE_SIZE;
                     const py = y * CONFIG.TILE_SIZE;
 
                     if (tile === TILE.BLOCK) {
-                        ctx.strokeStyle = 'rgba(236, 72, 153, 0.5)';
+                        ctx.strokeStyle = 'rgba(236, 72, 153, 0.4)';
                         ctx.lineWidth = 1;
                         ctx.strokeRect(px + 1, py + 1, CONFIG.TILE_SIZE - 2, CONFIG.TILE_SIZE - 2);
                     } else if (tile === TILE.SPIKE_UP || tile === TILE.SPIKE_DOWN) {
                         ctx.fillStyle = '#ec4899';
+                        ctx.shadowBlur = 10;
+                        ctx.shadowColor = '#ec4899';
                         ctx.beginPath();
                         if (tile === TILE.SPIKE_UP) {
                             ctx.moveTo(px, py + CONFIG.TILE_SIZE);
@@ -397,6 +406,7 @@
                             ctx.lineTo(px + CONFIG.TILE_SIZE, py);
                         }
                         ctx.fill();
+                        ctx.shadowBlur = 0;
                     } else if (tile === TILE.FINISH) {
                         ctx.fillStyle = 'rgba(0, 255, 0, 0.3)';
                         ctx.fillRect(px, py, CONFIG.TILE_SIZE, CONFIG.TILE_SIZE);
@@ -404,18 +414,19 @@
                 }
             }
 
-            if (gameState !== 'MENU') {
-                // Trail
-                if (player.trail.length > 1) {
+            // Малювання гравця та шлейфу
+            if (gameState === 'PLAYING' || gameState === 'OVER') {
+                if (player.trail && player.trail.length > 1 && player.trail[0]) {
                     ctx.beginPath();
                     ctx.strokeStyle = '#ec4899';
                     ctx.lineWidth = 4;
                     ctx.moveTo(player.trail[0].x, player.trail[0].y);
-                    player.trail.forEach(p => ctx.lineTo(p.x, p.y));
+                    player.trail.forEach(p => {
+                        if (p) ctx.lineTo(p.x, p.y);
+                    });
                     ctx.stroke();
                 }
 
-                // Player icon
                 ctx.save();
                 ctx.translate(player.x, player.y);
                 const angle = Math.atan2(player.dy, CONFIG.SPEED_X);
@@ -424,40 +435,53 @@
                 ctx.shadowBlur = 15;
                 ctx.shadowColor = '#ec4899';
                 ctx.beginPath();
-                ctx.moveTo(12, 0);
-                ctx.lineTo(-10, 8);
-                ctx.lineTo(-6, 0);
-                ctx.lineTo(-10, -8);
+                ctx.moveTo(12, 0); ctx.lineTo(-10, 8); ctx.lineTo(-6, 0); ctx.lineTo(-10, -8);
                 ctx.fill();
                 ctx.restore();
             }
-
             ctx.restore();
         }
 
         function loop() {
             update();
             draw();
-            frame++;
             requestAnimationFrame(loop);
         }
 
-        // Input Handling
-        const handleDown = (e) => { e.preventDefault(); player.input = true; if (gameState === 'PLAYING') Sound.play(300, 'sine', 0.1); };
-        const handleUp = (e) => { e.preventDefault(); player.input = false; };
+        // Керування
+        const handleDown = (e) => { 
+            e.preventDefault(); 
+            if (player) player.input = true; 
+            if (gameState === 'PLAYING') Sound.play(300, 'sine', 0.1); 
+        };
+        const handleUp = (e) => { 
+            e.preventDefault(); 
+            if (player) player.input = false; 
+        };
         
         window.addEventListener('mousedown', handleDown);
         window.addEventListener('mouseup', handleUp);
-        window.addEventListener('touchstart', handleDown);
-        window.addEventListener('touchend', handleUp);
-        window.addEventListener('keydown', (e) => { if (e.code === 'Space' || e.code === 'ArrowUp') player.input = true; });
-        window.addEventListener('keyup', (e) => { if (e.code === 'Space' || e.code === 'ArrowUp') player.input = false; });
+        window.addEventListener('touchstart', handleDown, {passive: false});
+        window.addEventListener('touchend', handleUp, {passive: false});
+        window.addEventListener('keydown', (e) => { 
+            if (e.code === 'Space' || e.code === 'ArrowUp') {
+                if (player) player.input = true;
+            }
+        });
+        window.addEventListener('keyup', (e) => { 
+            if (e.code === 'Space' || e.code === 'ArrowUp') {
+                if (player) player.input = false;
+            }
+        });
 
         document.getElementById('startBtn').onclick = startGame;
         document.getElementById('restartBtn').onclick = startGame;
-        window.addEventListener('resize', resize);
+        window.addEventListener('resize', initCanvas);
 
-        init();
+        // Початкова ініціалізація
+        initCanvas();
+        resetGameState();
+        requestAnimationFrame(loop);
     </script>
 </body>
 </html>

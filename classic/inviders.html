@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <!-- SEO Meta Tags -->
+    <title>Space Invaders | Classic Arcade Legend - BITSTART.CLUB</title>
+    <meta name="description" content="Play the definitive classic Space Invaders. No registration, local high score saving, and the full history of the 1978 arcade masterpiece. Optimized for BITSTART.CLUB.">
+    <meta name="keywords" content="space invaders online, retro arcade, classic invaders, play arcade no registration, bitstart club">
+    <link rel="canonical" href="https://bitstart.club/games/invaders.html">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y48JGFP9V9"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+    
+      gtag('config', 'G-Y48JGFP9V9');
+    </script>  
+  
+    <style>
+        body { font-family: 'Inter', sans-serif; background: #0b0f1a; color: #f3f4f6; overflow-x: hidden; }
+        .font-game { font-family: 'Orbitron', sans-serif; }
+        .glass-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .neon-text { text-shadow: 0 0 10px rgba(34, 197, 94, 0.8); }
+        .neon-border { border: 2px solid #22c55e; box-shadow: 0 0 15px rgba(34, 197, 94, 0.4); }
+        .ad-placeholder { border: 1px dashed rgba(34, 197, 94, 0.3); background: rgba(15, 23, 42, 0.5); }
+        
+        .game-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            aspect-ratio: 4 / 3;
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+            touch-action: none;
+        }
+
+        .overlay-screen {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 100;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        @media (max-height: 850px) {
+            .history-section { margin-top: 1.5rem; }
+            .header-nav { position: static; }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Header -->
+    <header class="bg-[#0f172a]/80 border-b border-indigo-900/50 z-50 backdrop-blur-md header-nav">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <a href="../index.html" class="text-2xl md:text-3xl font-black font-game text-indigo-500 tracking-widest neon-text">BITSTART<span class="text-white">.CLUB</span></a>
+            <nav class="hidden md:flex space-x-8">
+                <a href="../index.html" class="text-sm font-bold uppercase hover:text-indigo-400 transition">Home</a>
+                <a href="../learning.html" class="text-sm font-bold uppercase hover:text-indigo-400 transition">Learning</a>
+                <a href="../classic.html" class="text-sm font-bold uppercase text-green-400">Classic</a>
+                <a href="../modern.html" class="text-sm font-bold uppercase hover:text-indigo-400 transition">Modern</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="flex-grow container mx-auto px-2 md:px-4 py-4 main-content">
+        <div class="flex flex-col lg:flex-row gap-6">
+            
+            <!-- Game Zone -->
+            <div class="flex-grow">
+                <div class="glass-card p-3 md:p-6 rounded-3xl neon-border relative mb-6">
+                    
+                    <!-- Score Panel -->
+                    <div class="flex justify-between mb-4 font-game px-4">
+                        <div class="text-left">
+                            <div class="text-[10px] text-gray-500 uppercase tracking-tighter">Score</div>
+                            <div class="text-xl md:text-2xl font-black text-green-400" id="score">0</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-[10px] text-gray-500 uppercase tracking-tighter">High Score</div>
+                            <div class="text-xl md:text-2xl font-black text-indigo-400" id="highScore">0</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-[10px] text-gray-500 uppercase tracking-tighter">Shields</div>
+                            <div class="text-xl md:text-2xl font-black text-green-400" id="lives">3</div>
+                        </div>
+                    </div>
+
+                    <div class="game-wrapper border border-white/5">
+                        <canvas id="gameCanvas" width="800" height="600"></canvas>
+                        
+                        <!-- Start Screen -->
+                        <div id="startScreen" class="overlay-screen">
+                            <h1 class="text-4xl md:text-6xl font-game font-black text-green-400 mb-6 neon-text uppercase tracking-tight">Invaders</h1>
+                            <div class="space-y-2 text-gray-400 text-sm mb-8 font-game">
+                                <p>Move: Mouse or Arrows</p>
+                                <p>Fire: Click or Space</p>
+                                <p>Pause: Esc</p>
+                            </div>
+                            <button id="startBtn" class="bg-white text-black font-game font-bold px-12 py-4 rounded-2xl hover:bg-green-500 transition active:scale-95 uppercase">Initiate Combat</button>
+                        </div>
+
+                        <!-- Game Over Screen -->
+                        <div id="gameOverScreen" class="overlay-screen hidden">
+                            <h2 class="text-4xl font-game font-bold text-red-500 mb-4 uppercase">Mission Failed</h2>
+                            <p id="finalScore" class="text-white text-xl mb-8 font-game"></p>
+                            <button id="restartBtn" class="bg-green-600 hover:bg-green-500 text-white font-game font-bold px-12 py-4 rounded-2xl transition uppercase">Reboot System</button>
+                        </div>
+                    </div>
+
+                    <div id="invulnerableIndicator" class="mt-4 h-6 text-center text-xs font-game text-yellow-400 uppercase tracking-widest"></div>
+                </div>
+
+                <!-- History Section -->
+                <div class="glass-card p-6 md:p-8 rounded-3xl border border-white/5 history-section">
+                    <h2 class="text-xl md:text-2xl font-game font-bold text-indigo-400 mb-6 uppercase tracking-wider">The Legacy of Space Invaders</h2>
+                    <div class="space-y-4 text-gray-300 leading-relaxed text-sm">
+                        <p>
+                            Released in 1978 by Taito, <strong>Space Invaders</strong> was created by Tomohiro Nishikado. It wasn't just a game; it was a cultural phenomenon that defined the Golden Age of Arcade Games and influenced everything from Star Wars to modern gaming hardware.
+                        </p>
+                        <p>
+                            One of the most famous legends about the game is that it caused a shortage of 100-yen coins in Japan. While likely an urban myth, it illustrates the sheer scale of its success. Technically, the game's difficulty curve was a happy accident: as the processor had fewer invaders to render, it processed the remaining ones faster, making them move more quickly—unintentionally creating the first "difficulty ramp" in gaming history.
+                        </p>
+                        <div class="bg-black/30 p-4 rounded-xl border-l-4 border-green-500 my-4">
+                            <p class="italic text-xs text-gray-400">
+                                Professional Insight: Nishikado had to design his own hardware and development tools because the microcomputers available in Japan at the time weren't powerful enough to handle the game's logic.
+                            </p>
+                        </div>
+                        <p>
+                            At BITSTART.CLUB, we’ve modernized the controls for smooth mouse and keyboard based navigation while preserving the pixel-perfect tension of the 1978 original.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <aside class="w-full lg:w-1/4 space-y-6">
+                <div class="ad-placeholder h-40 flex items-center justify-center rounded-3xl">
+                    <span class="text-green-900 font-bold uppercase tracking-widest text-[10px]">Top Sidebar Ad</span>
+                </div>
+                
+                <div class="glass-card p-6 rounded-3xl border border-green-900/50">
+                    <h3 class="font-game text-xs font-bold text-green-400 mb-4 uppercase">Classic Library</h3>
+                    <ul class="space-y-3 text-sm">
+                        <li class="flex items-center gap-2 text-green-400 font-bold"><div class="w-1.5 h-1.5 rounded-full bg-green-500"></div> Space Invaders</li>
+                        <li><a href="snake.html" class="hover:text-green-400 transition">Neon Snake</a></li>
+                        <li><a href="pong.html" class="hover:text-green-400 transition">Cyber Pong</a></li>
+                    </ul>
+                </div>
+
+                <div class="glass-card p-6 rounded-3xl border border-indigo-900/50">
+                    <h4 class="text-xs font-bold uppercase text-indigo-400 mb-2 font-game">Educational Value</h4>
+                    <p class="text-[10px] text-gray-500 leading-tight">
+                        Space Invaders improves strategic multitasking and predictive aiming. It teaches resource management through barrier conservation and prioritization of targets.
+                    </p>
+                </div>
+
+                <div class="ad-placeholder h-64 flex items-center justify-center rounded-3xl">
+                    <span class="text-green-900 font-bold uppercase tracking-widest text-[10px]">Square Ad Unit</span>
+                </div>
+            </aside>
+        </div>
+    </main>
+
+    <footer class="bg-[#0f172a] border-t border-indigo-900/50 py-8 mt-12">
+        <div class="container mx-auto px-4 text-center">
+            <div class="flex justify-center space-x-6 md:space-x-8 text-[9px] font-bold uppercase tracking-widest text-gray-500 mb-6">
+                <a href="../privacy.html" class="hover:text-green-400 transition">Privacy</a>
+                <a href="../terms.html" class="hover:text-green-400 transition">Terms</a>
+                <a href="../contact.html" class="hover:text-green-400 transition">Support</a>
+            </div>
+            <p class="text-[9px] text-gray-800 uppercase tracking-[0.3em]">© 2026 BITSTART.CLUB • THE NO-DATA ZONE</p>
+        </div>
+    </footer>
+
+    <script>
+        'use strict';
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const scoreEl = document.getElementById('score');
+        const livesEl = document.getElementById('lives');
+        const highScoreEl = document.getElementById('highScore');
+        const invulnerableIndicatorEl = document.getElementById('invulnerableIndicator');
+        const startScreen = document.getElementById('startScreen');
+        const gameOverScreen = document.getElementById('gameOverScreen');
+        const finalScoreEl = document.getElementById('finalScore');
+        const startBtn = document.getElementById('startBtn');
+        const restartBtn = document.getElementById('restartBtn');
+
+        let game = null;
+        let animationId = null;
+        let lastTime = 0;
+
+        class AudioHandler {
+            constructor() { this.audioContext = null; this.enabled = false; }
+            init() {
+                try {
+                    if (!this.audioContext) this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    if (this.audioContext.state === 'suspended') this.audioContext.resume();
+                    this.enabled = true;
+                } catch (e) { this.enabled = false; }
+            }
+            playShoot() {
+                if (!this.enabled) return;
+                const osc = this.audioContext.createOscillator();
+                const gain = this.audioContext.createGain();
+                osc.type = 'square';
+                osc.frequency.setValueAtTime(440, this.audioContext.currentTime);
+                gain.gain.setValueAtTime(0.05, this.audioContext.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + 0.1);
+                osc.connect(gain); gain.connect(this.audioContext.destination);
+                osc.start(); osc.stop(this.audioContext.currentTime + 0.1);
+            }
+            playExplosion() {
+                if (!this.enabled) return;
+                const dur = 0.2;
+                const bufferSize = this.audioContext.sampleRate * dur;
+                const buffer = this.audioContext.createBuffer(1, bufferSize, this.audioContext.sampleRate);
+                const data = buffer.getChannelData(0);
+                for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+                const noise = this.audioContext.createBufferSource();
+                noise.buffer = buffer;
+                const gain = this.audioContext.createGain();
+                gain.gain.setValueAtTime(0.05, this.audioContext.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + dur);
+                noise.connect(gain); gain.connect(this.audioContext.destination);
+                noise.start(); noise.stop(this.audioContext.currentTime + dur);
+            }
+        }
+        const audio = new AudioHandler();
+
+        class Player {
+            constructor(game) {
+                this.game = game;
+                this.width = 50; this.height = 20;
+                this.x = (this.game.width / 2) - (this.width / 2);
+                this.y = this.game.height - this.height - 20;
+                this.color = '#22c55e';
+                this.shotCooldown = 300;
+                this.lastShotTime = 0;
+                this.kbSpeed = 8;
+                this.usingMouse = false;
+            }
+            update() {
+                // Key state handling
+                let moving = false;
+                if (this.game.keys['ArrowLeft'] || this.game.keys['KeyA']) {
+                    this.x -= this.kbSpeed;
+                    this.usingMouse = false;
+                    moving = true;
+                }
+                if (this.game.keys['ArrowRight'] || this.game.keys['KeyD']) {
+                    this.x += this.kbSpeed;
+                    this.usingMouse = false;
+                    moving = true;
+                }
+                
+                // Snappy mouse following (removed the "dead zone" logic)
+                if (this.usingMouse && !moving) {
+                    this.x = this.game.mouseX - this.width / 2;
+                }
+
+                this.x = Math.max(0, Math.min(this.game.width - this.width, this.x));
+            }
+            draw(context) {
+                context.fillStyle = this.color;
+                context.shadowBlur = 10; context.shadowColor = this.color;
+                context.fillRect(this.x, this.y, this.width, this.height);
+                context.fillRect(this.x + this.width / 2 - 5, this.y - 8, 10, 8);
+                context.shadowBlur = 0;
+            }
+            shoot() {
+                const now = performance.now();
+                if (now - this.lastShotTime > this.shotCooldown) {
+                    this.game.playerProjectiles.push(new Projectile(this.game, this.x + this.width / 2 - 2, this.y, '#4ade80', -8));
+                    this.lastShotTime = now;
+                    audio.playShoot();
+                }
+            }
+        }
+
+        class Projectile {
+            constructor(game, x, y, color, speed) {
+                this.game = game; this.x = x; this.y = y;
+                this.width = 3; this.height = 12;
+                this.color = color; this.speed = speed;
+                this.markedForDeletion = false;
+            }
+            update() {
+                this.y += this.speed;
+                if (this.y + this.height < 0 || this.y > this.game.height) this.markedForDeletion = true;
+            }
+            draw(context) {
+                context.fillStyle = this.color;
+                context.fillRect(this.x, this.y, this.width, this.height);
+            }
+        }
+
+        class Invader {
+            constructor(game, x, y) {
+                this.game = game; this.x = x; this.y = y;
+                this.width = 40; this.height = 30;
+                this.markedForDeletion = false;
+            }
+            draw(context) {
+                context.fillStyle = '#22c55e';
+                context.fillRect(this.x, this.y, this.width, this.height);
+                context.fillStyle = '#000';
+                context.fillRect(this.x + 8, this.y + 8, 6, 6);
+                context.fillRect(this.x + 26, this.y + 8, 6, 6);
+            }
+        }
+
+        class Grid {
+            constructor(game) {
+                this.game = game; this.invaders = [];
+                this.columns = 8; this.rows = 4;
+                this.speed = 30; this.direction = 1;
+                this.dropDistance = 30;
+                this.shootProb = 0.01;
+                this.create();
+            }
+            create() {
+                for (let r = 0; r < this.rows; r++) {
+                    for (let c = 0; c < this.columns; c++) {
+                        this.invaders.push(new Invader(this.game, c * 80 + 60, r * 60 + 50));
+                    }
+                }
+            }
+            update(deltaTime) {
+                const step = (this.speed * deltaTime) / 1000;
+                let edge = false;
+                this.invaders.forEach(inv => {
+                    inv.x += step * this.direction;
+                    if (inv.x <= 0 || inv.x + inv.width >= this.game.width) edge = true;
+                });
+                if (edge) {
+                    this.direction *= -1;
+                    this.invaders.forEach(inv => inv.y += this.dropDistance);
+                }
+                if (Math.random() < this.shootProb && this.invaders.length > 0) {
+                    const randomInv = this.invaders[Math.floor(Math.random() * this.invaders.length)];
+                    this.game.enemyProjectiles.push(new Projectile(this.game, randomInv.x + randomInv.width / 2, randomInv.y + randomInv.height, '#fff', 5));
+                }
+            }
+            draw(ctx) { this.invaders.forEach(i => i.draw(ctx)); }
+        }
+
+        class Particle {
+            constructor(game, x, y) {
+                this.x = x; this.y = y; this.size = Math.random() * 3;
+                this.sx = Math.random() * 4 - 2; this.sy = Math.random() * 4 - 2;
+                this.life = 100; this.markedForDeletion = false;
+            }
+            update() {
+                this.x += this.sx; this.y += this.sy; this.life -= 2;
+                if (this.life <= 0) this.markedForDeletion = true;
+            }
+            draw(ctx) {
+                ctx.fillStyle = `rgba(34, 197, 94, ${this.life / 100})`;
+                ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
+            }
+        }
+
+        class Barrier {
+            constructor(game, x) {
+                this.game = game; this.x = x; this.y = 450;
+                this.blockSize = 10; this.grid = [];
+                for (let r = 0; r < 5; r++) {
+                    for (let c = 0; c < 10; c++) this.grid.push({ x: c, y: r, alive: true });
+                }
+            }
+            draw(ctx) {
+                ctx.fillStyle = '#10b981';
+                this.grid.forEach(b => {
+                    if (b.alive) ctx.fillRect(this.x + b.x * this.blockSize, this.y + b.y * this.blockSize, this.blockSize, this.blockSize);
+                });
+            }
+        }
+
+        class Game {
+            constructor(w, h) {
+                this.width = w; this.height = h;
+                this.mouseX = w / 2;
+                this.keys = {};
+                this.paused = false; this.gameOver = false;
+                this.player = new Player(this);
+                this.grid = new Grid(this);
+                this.barriers = [new Barrier(this, 120), new Barrier(this, 350), new Barrier(this, 580)];
+                this.playerProjectiles = []; this.enemyProjectiles = []; this.particles = [];
+                this.score = 0; this.lives = 3; this.level = 1;
+                this.highScore = parseInt(localStorage.getItem('invadersHighScore')) || 0;
+                this.invulnerable = false; this.invulnTimer = 0;
+                this.updateUI();
+            }
+            togglePause() { if (!this.gameOver) this.paused = !this.paused; }
+            update(dt) {
+                if (this.gameOver || this.paused) return;
+                this.player.update();
+                this.grid.update(dt);
+                this.grid.speed = 30 + (this.level * 10);
+                if (this.invulnerable) {
+                    this.invulnTimer -= dt;
+                    if (this.invulnTimer <= 0) this.invulnerable = false;
+                }
+                [...this.playerProjectiles, ...this.enemyProjectiles, ...this.particles].forEach(e => e.update(dt));
+                this.checkCollisions();
+                this.playerProjectiles = this.playerProjectiles.filter(p => !p.markedForDeletion);
+                this.enemyProjectiles = this.enemyProjectiles.filter(p => !p.markedForDeletion);
+                this.particles = this.particles.filter(p => !p.markedForDeletion);
+                this.grid.invaders = this.grid.invaders.filter(i => !i.markedForDeletion);
+                if (this.grid.invaders.length === 0) this.nextLevel();
+            }
+            draw(ctx) {
+                ctx.clearRect(0, 0, this.width, this.height);
+                this.barriers.forEach(b => b.draw(ctx));
+                if (!(this.invulnerable && Math.floor(Date.now() / 100) % 2 === 0)) this.player.draw(ctx);
+                this.grid.draw(ctx);
+                [...this.playerProjectiles, ...this.enemyProjectiles, ...this.particles].forEach(e => e.draw(ctx));
+                if (this.paused) {
+                    ctx.fillStyle = 'rgba(0,0,0,0.7)'; ctx.fillRect(0,0,this.width,this.height);
+                    ctx.fillStyle = '#22c55e'; ctx.font = '24px Orbitron'; ctx.textAlign='center';
+                    ctx.fillText('PAUSED', this.width/2, this.height/2);
+                }
+            }
+            checkCollisions() {
+                this.playerProjectiles.forEach(proj => {
+                    this.grid.invaders.forEach(inv => {
+                        if (this.isHit(proj, inv)) {
+                            proj.markedForDeletion = true; inv.markedForDeletion = true;
+                            this.score += 10; audio.playExplosion(); this.explode(inv.x, inv.y);
+                        }
+                    });
+                });
+                if (!this.invulnerable) {
+                    this.enemyProjectiles.forEach(proj => {
+                        if (this.isHit(proj, this.player)) {
+                            proj.markedForDeletion = true; this.loseLife();
+                        }
+                    });
+                }
+                
+                // GAME OVER: Invaders reach the bottom line or touch player
+                this.grid.invaders.forEach(inv => {
+                    if (this.isHit(inv, this.player) || inv.y + inv.height > this.height - 40) {
+                        this.endGame();
+                    }
+                });
+
+                [...this.playerProjectiles, ...this.enemyProjectiles].forEach(p => {
+                    this.barriers.forEach(bar => {
+                        bar.grid.forEach(block => {
+                            if (block.alive && this.isHit(p, {x: bar.x + block.x * 10, y: bar.y + block.y * 10, width: 10, height: 10})) {
+                                p.markedForDeletion = true; block.alive = false;
+                            }
+                        });
+                    });
+                });
+                this.updateUI();
+            }
+            isHit(a, b) { return a.x < b.x + b.width && a.x + a.width > b.x && a.y < b.y + b.height && a.y + a.height > b.y; }
+            loseLife() {
+                this.lives--; audio.playExplosion();
+                if (this.lives <= 0) this.endGame();
+                else { this.invulnerable = true; this.invulnTimer = 2000; }
+            }
+            explode(x, y) { for(let i=0; i<8; i++) this.particles.push(new Particle(this, x, y)); }
+            nextLevel() { this.level++; this.grid = new Grid(this); }
+            endGame() {
+                this.gameOver = true;
+                if (this.score > this.highScore) localStorage.setItem('invadersHighScore', this.score);
+                finalScoreEl.innerText = `Final Score: ${this.score}`;
+                gameOverScreen.classList.remove('hidden');
+            }
+            updateUI() {
+                scoreEl.innerText = this.score; livesEl.innerText = this.lives;
+                highScoreEl.innerText = localStorage.getItem('invadersHighScore') || 0;
+                invulnerableIndicatorEl.innerText = this.invulnerable ? "SHIELDS ACTIVE" : "";
+            }
+        }
+
+        function animate(timestamp) {
+            if (!game || game.gameOver) return;
+            const dt = timestamp - lastTime; lastTime = timestamp;
+            game.update(dt || 0); game.draw(ctx);
+            animationId = requestAnimationFrame(animate);
+        }
+
+        setup();
+        function setup() {
+            canvas.addEventListener('mousemove', e => {
+                const rect = canvas.getBoundingClientRect();
+                const scaleX = canvas.width / rect.width;
+                if (game) {
+                    game.mouseX = (e.clientX - rect.left) * scaleX;
+                    game.player.usingMouse = true;
+                }
+            });
+            
+            canvas.addEventListener('click', () => { if (game && !game.paused) game.player.shoot(); });
+            
+            document.addEventListener('keydown', e => {
+                if (game) game.keys[e.code] = true;
+                if (['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.code)) e.preventDefault();
+                if (e.code === 'Escape' && game) game.togglePause();
+                if (e.code === 'Space' && game && !game.paused && !game.gameOver) game.player.shoot();
+            });
+
+            document.addEventListener('keyup', e => { if (game) game.keys[e.code] = false; });
+
+            startBtn.onclick = () => {
+                startScreen.classList.add('hidden'); audio.init();
+                game = new Game(800, 600); lastTime = performance.now();
+                requestAnimationFrame(animate);
+            };
+            restartBtn.onclick = () => {
+                gameOverScreen.classList.add('hidden');
+                game = new Game(800, 600); lastTime = performance.now();
+                requestAnimationFrame(animate);
+            };
+        }
+    </script>
+</body>
+</html>

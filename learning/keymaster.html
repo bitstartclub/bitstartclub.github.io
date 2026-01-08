@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    
+    <!-- SEO Meta Tags -->
+    <title>Keyboard Master | Interactive Typing Trainer - BITSTART.CLUB</title>
+    <meta name="description" content="Master your typing speed and accuracy with our interactive keyboard trainer. Designed for cognitive development and computer literacy. Optimized for BITSTART.CLUB." />
+    <meta name="keywords" content="keyboard trainer, typing practice, touch typing, educational games, computer literacy, bitstart club" />
+    <link rel="canonical" href="https://bitstart.club/learning/keyboard.html" />
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y48JGFP9V9"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+    
+      gtag('config', 'G-Y48JGFP9V9');
+    </script>  
+  
+    <style>
+        body { font-family: 'Inter', sans-serif; background: #0b0f1a; color: #f3f4f6; overflow-x: hidden; }
+        .font-game { font-family: 'Orbitron', sans-serif; }
+        .glass-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .neon-text { text-shadow: 0 0 10px rgba(99, 102, 241, 0.8); }
+        .neon-border { border: 2px solid #6366f1; box-shadow: 0 0 15px rgba(99, 102, 241, 0.4); }
+        .ad-placeholder { border: 1px dashed rgba(99, 102, 241, 0.3); background: rgba(15, 23, 42, 0.5); }
+        
+        .game-wrapper {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: inset 0 0 20px rgba(0,0,0,1);
+        }
+
+        .letter {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(145deg, #1e293b, #0f172a);
+            border: 2px solid #6366f1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: #fff;
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.3);
+            will-change: transform;
+            user-select: none;
+            z-index: 10;
+        }
+
+        .letter.urgent { border-color: #f87171; box-shadow: 0 0 20px rgba(248, 113, 113, 0.6); animation: pulse 0.5s infinite alternate; }
+        @keyframes pulse { from { transform: scale(1); } to { transform: scale(1.05); } }
+
+        .overlay-screen {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 100;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .pill { background: rgba(30, 41, 59, 0.8); border: 1px solid rgba(255, 255, 255, 0.1); }
+        
+        button.active-toggle { background: #6366f1; color: white; border-color: #818cf8; }
+        
+        .custom-checkbox {
+            width: 20px;
+            height: 20px;
+            accent-color: #6366f1;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Header -->
+    <header class="bg-[#0f172a]/80 border-b border-indigo-900/50 z-50 backdrop-blur-md">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <a href="../index.html" class="text-2xl md:text-3xl font-black font-game text-indigo-500 tracking-widest neon-text">BITSTART<span class="text-white">.CLUB</span></a>
+            <nav class="hidden md:flex space-x-8">
+                <a href="../index.html" class="text-sm font-bold uppercase hover:text-indigo-400 transition">Home</a>
+                <a href="../learning.html" class="text-sm font-bold uppercase text-indigo-400">Learning</a>
+                <a href="../classic.html" class="text-sm font-bold uppercase hover:text-indigo-400 transition">Classic</a>
+                <a href="../modern.html" class="text-sm font-bold uppercase hover:text-indigo-400 transition">Modern</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="flex-grow container mx-auto px-2 md:px-4 py-4">
+        <div class="flex flex-col lg:flex-row gap-6">
+            
+            <!-- Main Game Zone -->
+            <div class="flex-grow lg:w-3/4">
+                <div class="glass-card p-4 md:p-6 rounded-3xl neon-border relative mb-6">
+                    
+                    <!-- Stats Panel -->
+                    <div class="grid grid-cols-3 gap-4 mb-6 font-game">
+                        <div class="pill p-3 rounded-2xl text-center">
+                            <div class="text-[10px] text-gray-500 uppercase">Score</div>
+                            <div id="score" class="text-xl md:text-2xl font-black text-indigo-400">0</div>
+                        </div>
+                        <div class="pill p-3 rounded-2xl text-center">
+                            <div class="text-[10px] text-gray-500 uppercase">Time Left</div>
+                            <div id="timer" class="text-xl md:text-2xl font-black text-green-400">60</div>
+                        </div>
+                        <div class="pill p-3 rounded-2xl text-center">
+                            <div class="text-[10px] text-gray-500 uppercase">Streak</div>
+                            <div id="streak" class="text-xl md:text-2xl font-black text-yellow-400">0</div>
+                        </div>
+                    </div>
+
+                    <div id="gameRegion" class="game-wrapper border border-white/5">
+                        <div id="feedback" class="absolute top-4 left-1/2 -translate-x-1/2 z-50 pointer-events-none text-xl font-game font-bold opacity-0 transition-opacity"></div>
+                        
+                        <!-- Start Screen -->
+                        <div id="startScreen" class="overlay-screen">
+                            <h1 class="text-4xl md:text-6xl font-game font-black text-indigo-400 mb-4 neon-text uppercase">KeyMaster</h1>
+                            <p class="text-gray-400 mb-8 max-w-md">Master the art of touch typing. Strike the letters as they fly across the screen.</p>
+                            <div class="flex flex-col gap-4">
+                                <button id="startBtn" class="bg-indigo-600 text-white font-game font-bold px-12 py-4 rounded-2xl hover:bg-indigo-500 transition active:scale-95 uppercase tracking-widest shadow-lg shadow-indigo-500/20">Initialize Training</button>
+                                <p class="text-[10px] text-gray-500 uppercase tracking-widest">Or press Enter to start</p>
+                            </div>
+                        </div>
+
+                        <!-- Result Screen -->
+                        <div id="resultScreen" class="overlay-screen hidden overflow-y-auto">
+                            <h2 class="text-3xl font-game font-bold text-indigo-400 mb-6 uppercase">Session Report</h2>
+                            <div class="grid grid-cols-2 gap-4 mb-4 w-full max-w-md">
+                                <div class="pill p-4 rounded-xl"><div class="text-[10px] text-gray-500">Accuracy</div><div id="resAccuracy" class="text-xl font-bold">0%</div></div>
+                                <div class="pill p-4 rounded-xl"><div class="text-[10px] text-gray-500">Avg Reaction</div><div id="resReaction" class="text-xl font-bold">0ms</div></div>
+                                <div class="pill p-4 rounded-xl"><div class="text-[10px] text-gray-500">Correct</div><div id="resCorrect" class="text-xl font-bold text-green-400">0</div></div>
+                                <div class="pill p-4 rounded-xl"><div class="text-[10px] text-gray-500 text-red-400">Errors</div><div id="resMissed" class="text-xl font-bold text-red-400">0</div></div>
+                            </div>
+                            <div class="mb-8 text-sm text-gray-400 font-game uppercase tracking-tighter" id="hardestChars"></div>
+                            <button id="restartBtn" class="bg-white text-black font-game font-bold px-12 py-4 rounded-2xl hover:bg-gray-200 transition uppercase tracking-widest">Restart Session</button>
+                        </div>
+                    </div>
+
+                    <!-- Controls -->
+                    <div class="mt-6 space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="space-y-4">
+                                <h3 class="text-xs font-game uppercase text-gray-500">Difficulty Level</h3>
+                                <div id="levelSelect" class="flex flex-wrap gap-2">
+                                    <button data-level="beginner" class="active-toggle text-[10px] font-game px-4 py-2 rounded-lg border border-white/10 uppercase">Beginner</button>
+                                    <button data-level="easy" class="text-[10px] font-game px-4 py-2 rounded-lg border border-white/10 uppercase">Easy</button>
+                                    <button data-level="medium" class="text-[10px] font-game px-4 py-2 rounded-lg border border-white/10 uppercase">Advanced</button>
+                                    <button data-level="hard" class="text-[10px] font-game px-4 py-2 rounded-lg border border-white/10 uppercase">Master</button>
+                                </div>
+                            </div>
+                            <div class="space-y-4">
+                                <h3 class="text-xs font-game uppercase text-gray-500">Initial Velocity</h3>
+                                <div id="speedSelect" class="flex flex-wrap gap-2">
+                                    <button data-speed="slow" class="text-[10px] font-game px-4 py-2 rounded-lg border border-white/10 uppercase">Slow</button>
+                                    <button data-speed="medium" class="active-toggle text-[10px] font-game px-4 py-2 rounded-lg border border-white/10 uppercase">Standard</button>
+                                    <button data-speed="fast" class="text-[10px] font-game px-4 py-2 rounded-lg border border-white/10 uppercase">Supersonic</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center gap-6 p-4 rounded-2xl bg-white/5 border border-white/10">
+                            <div class="flex items-center gap-3">
+                                <input type="checkbox" id="smartMode" class="custom-checkbox" checked>
+                                <label for="smartMode" class="text-[10px] font-game uppercase text-gray-300 cursor-pointer">Smart Adaptive Difficulty</label>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <input type="checkbox" id="soundToggle" class="custom-checkbox" checked>
+                                <label for="soundToggle" class="text-[10px] font-game uppercase text-gray-300 cursor-pointer">Sound Effects</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- History Content -->
+                <div class="glass-card p-6 md:p-8 rounded-3xl border border-white/5">
+                    <h2 class="text-xl font-game font-bold text-indigo-400 mb-6 uppercase tracking-wider">The Evolution of Typing</h2>
+                    <div class="space-y-4 text-gray-300 leading-relaxed text-sm">
+                        <p>The <strong>QWERTY</strong> layout we use today was patented in 1878 by Christopher Sholes. Legend suggests it was designed to slow down typists to prevent mechanical jams, though modern research suggests it was optimized for telegraph operators.</p>
+                        <p>Touch typing—typing without looking—was popularized by Frank Edward McGurrin in 1888. This skill shifted typing from a visual-manual task to a pure muscle-memory reflex.</p>
+                        <div class="bg-indigo-500/10 p-4 rounded-xl border-l-4 border-indigo-500 my-4">
+                            <p class="italic text-xs text-gray-400">Did you know? The fastest typists can exceed 200 words per minute (WPM), while the average person types at around 40 WPM.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <aside class="w-full lg:w-1/4 space-y-6">
+                <div class="ad-placeholder h-48 flex items-center justify-center rounded-3xl text-[10px] uppercase tracking-widest text-indigo-900 font-bold">Sidebar Ad</div>
+
+                <div class="glass-card p-6 rounded-3xl border border-indigo-900/50">
+                    <h3 class="font-game text-xs font-bold text-indigo-400 mb-4 uppercase">Educational Value</h3>
+                    <ul class="space-y-4 text-[11px] text-gray-400">
+                        <li><strong class="text-gray-200 block mb-1">Neuroplasticity:</strong> Building neural pathways between visual recognition and motor response.</li>
+                        <li><strong class="text-gray-200 block mb-1">Cognitive Load:</strong> Automating typing frees mental resources for creative thinking.</li>
+                        <li><strong class="text-gray-200 block mb-1">Health:</strong> Proper technique reduces physical strain during long work sessions.</li>
+                    </ul>
+                </div>
+
+                <div class="ad-placeholder h-64 flex items-center justify-center rounded-3xl text-[10px] uppercase tracking-widest text-indigo-900 font-bold">Square Ad Unit</div>
+            </aside>
+        </div>
+    </main>
+
+    <footer class="bg-[#0f172a] border-t border-indigo-900/50 py-8 mt-12">
+        <div class="container mx-auto px-4 text-center">
+            <p class="text-[9px] text-gray-800 uppercase tracking-[0.3em]">© 2026 BITSTART.CLUB • THE NO-DATA ZONE</p>
+        </div>
+    </footer>
+
+    <script>
+        'use strict';
+
+        const CONFIG = {
+            DURATION: 60,
+            LEVELS: {
+                beginner: "asdfjkl; ",
+                easy: "abcdefghijklmnopqrstuvwxyz",
+                medium: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
+                hard: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+"
+            },
+            SPEEDS: {
+                slow: { spawn: 2000, travel: 8000 },
+                medium: { spawn: 1200, travel: 5000 },
+                fast: { spawn: 700, travel: 3000 }
+            }
+        };
+
+        class Game {
+            constructor() {
+                this.score = 0;
+                this.streak = 0;
+                this.correct = 0;
+                this.wrong = 0;
+                this.missed = 0;
+                this.reactions = [];
+                this.charStats = new Map();
+                this.letters = new Map();
+                this.running = false;
+                this.level = 'beginner';
+                this.speed = 'medium';
+                this.timeLeft = CONFIG.DURATION;
+                this.timerInterval = null;
+                this.spawnInterval = null;
+                this.idCounter = 0;
+                this.currentSpawnRate = 0;
+                
+                this.audioCtx = null;
+
+                this.dom = {
+                    region: document.getElementById('gameRegion'),
+                    score: document.getElementById('score'),
+                    timer: document.getElementById('timer'),
+                    streak: document.getElementById('streak'),
+                    feedback: document.getElementById('feedback'),
+                    startScreen: document.getElementById('startScreen'),
+                    resultScreen: document.getElementById('resultScreen'),
+                    resAccuracy: document.getElementById('resAccuracy'),
+                    resReaction: document.getElementById('resReaction'),
+                    resCorrect: document.getElementById('resCorrect'),
+                    resMissed: document.getElementById('resMissed'),
+                    hardestChars: document.getElementById('hardestChars'),
+                    smartMode: document.getElementById('smartMode'),
+                    soundToggle: document.getElementById('soundToggle')
+                };
+
+                this.initEvents();
+            }
+
+            initSound() {
+                if (!this.audioCtx && this.dom.soundToggle.checked) {
+                    this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+            }
+
+            playSound(freq, type = 'square', dur = 0.1) {
+                if (!this.audioCtx || !this.dom.soundToggle.checked) return;
+                const osc = this.audioCtx.createOscillator();
+                const gain = this.audioCtx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, this.audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.05, this.audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, this.audioCtx.currentTime + dur);
+                osc.connect(gain); gain.connect(this.audioCtx.destination);
+                osc.start(); osc.stop(this.audioCtx.currentTime + dur);
+            }
+
+            initEvents() {
+                document.getElementById('startBtn').onclick = () => this.start();
+                document.getElementById('restartBtn').onclick = () => this.start();
+                
+                document.querySelectorAll('#levelSelect button').forEach(btn => {
+                    btn.onclick = (e) => {
+                        document.querySelectorAll('#levelSelect button').forEach(b => b.classList.remove('active-toggle'));
+                        e.target.classList.add('active-toggle');
+                        this.level = e.target.dataset.level;
+                    };
+                });
+
+                document.querySelectorAll('#speedSelect button').forEach(btn => {
+                    btn.onclick = (e) => {
+                        document.querySelectorAll('#speedSelect button').forEach(b => b.classList.remove('active-toggle'));
+                        e.target.classList.add('active-toggle');
+                        this.speed = e.target.dataset.speed;
+                    };
+                });
+
+                window.onkeydown = (e) => {
+                    if (e.code === 'Enter' && !this.running) this.start();
+                    if (!this.running) return;
+                    if (e.code === 'Escape') this.stop();
+                    if (e.key.length === 1) this.handleInput(e.key);
+                };
+            }
+
+            start() {
+                this.initSound();
+                this.reset();
+                this.running = true;
+                this.dom.startScreen.classList.add('hidden');
+                this.dom.resultScreen.classList.add('hidden');
+                
+                this.currentSpawnRate = CONFIG.SPEEDS[this.speed].spawn;
+
+                this.timerInterval = setInterval(() => {
+                    this.timeLeft--;
+                    this.dom.timer.innerText = this.timeLeft;
+                    if (this.timeLeft <= 0) this.stop();
+                }, 1000);
+
+                this.spawnLoop();
+            }
+
+            spawnLoop() {
+                if (!this.running) return;
+                this.spawnLetter();
+                this.spawnInterval = setTimeout(() => this.spawnLoop(), this.currentSpawnRate);
+            }
+
+            reset() {
+                this.score = 0;
+                this.streak = 0;
+                this.correct = 0;
+                this.wrong = 0;
+                this.missed = 0;
+                this.reactions = [];
+                this.charStats.clear();
+                this.timeLeft = CONFIG.DURATION;
+                this.letters.forEach(l => l.el.remove());
+                this.letters.clear();
+                this.updateUI();
+            }
+
+            stop() {
+                this.running = false;
+                clearInterval(this.timerInterval);
+                clearTimeout(this.spawnInterval);
+                this.showResults();
+            }
+
+            spawnLetter() {
+                if (!this.running) return;
+                const charSet = CONFIG.LEVELS[this.level];
+                const char = charSet[Math.floor(Math.random() * charSet.length)];
+                const id = this.idCounter++;
+                const el = document.createElement('div');
+                el.className = 'letter';
+                el.innerText = char === ' ' ? '␣' : char;
+                
+                const y = Math.random() * (this.dom.region.offsetHeight - 80) + 10;
+                el.style.top = `${y}px`;
+                el.style.left = `-60px`;
+                
+                this.dom.region.appendChild(el);
+                
+                const startTime = performance.now();
+                const travelTime = CONFIG.SPEEDS[this.speed].travel;
+                
+                const anim = el.animate([
+                    { left: '-60px' },
+                    { left: `${this.dom.region.offsetWidth}px` }
+                ], {
+                    duration: travelTime,
+                    easing: 'linear'
+                });
+
+                const letterObj = { el, char, startTime, id };
+                this.letters.set(id, letterObj);
+
+                anim.onfinish = () => {
+                    if (this.letters.has(id)) {
+                        this.missed++;
+                        this.streak = 0;
+                        this.logCharStat(char, false);
+                        this.letters.delete(id);
+                        el.remove();
+                        this.playSound(150, 'sawtooth', 0.2);
+                        this.showFeedback('Missed!', 'text-red-400');
+                        this.updateUI();
+                    }
+                };
+
+                setTimeout(() => { if (this.letters.has(id)) el.classList.add('urgent'); }, travelTime * 0.75);
+            }
+
+            handleInput(key) {
+                let found = null;
+                let oldestTime = Infinity;
+
+                for (let [id, l] of this.letters) {
+                    if (l.char === key && l.startTime < oldestTime) {
+                        oldestTime = l.startTime;
+                        found = id;
+                    }
+                }
+
+                if (found !== null) {
+                    const l = this.letters.get(found);
+                    const reaction = performance.now() - l.startTime;
+                    this.reactions.push(reaction);
+                    this.correct++;
+                    this.streak++;
+                    this.score += Math.max(1, Math.floor(10 + (this.streak * 0.5)));
+                    this.logCharStat(l.char, true);
+                    
+                    l.el.remove();
+                    this.letters.delete(found);
+                    this.playSound(600, 'sine', 0.1);
+                    this.showFeedback('Excellent!', 'text-green-400');
+                    
+                    if (this.dom.smartMode.checked && this.streak % 5 === 0) {
+                        this.currentSpawnRate = Math.max(400, this.currentSpawnRate * 0.95);
+                    }
+                } else {
+                    this.wrong++;
+                    this.streak = 0;
+                    this.playSound(100, 'square', 0.1);
+                    this.showFeedback('Wrong!', 'text-red-500');
+                }
+                this.updateUI();
+            }
+
+            logCharStat(char, success) {
+                if (!this.charStats.has(char)) this.charStats.set(char, { correct: 0, fail: 0 });
+                const stat = this.charStats.get(char);
+                if (success) stat.correct++; else stat.fail++;
+            }
+
+            showFeedback(txt, color) {
+                this.dom.feedback.innerText = txt;
+                this.dom.feedback.className = `absolute top-4 left-1/2 -translate-x-1/2 z-50 pointer-events-none text-xl font-game font-bold ${color}`;
+                this.dom.feedback.style.opacity = '1';
+                setTimeout(() => this.dom.feedback.style.opacity = '0', 500);
+            }
+
+            updateUI() {
+                this.dom.score.innerText = this.score;
+                this.dom.streak.innerText = this.streak;
+                this.dom.timer.innerText = this.timeLeft;
+            }
+
+            showResults() {
+                const total = this.correct + this.wrong + this.missed;
+                const accuracy = total > 0 ? Math.round((this.correct / total) * 100) : 0;
+                const avgReaction = this.reactions.length > 0 ? Math.round(this.reactions.reduce((a,b)=>a+b,0) / this.reactions.length) : 0;
+                
+                this.dom.resAccuracy.innerText = `${accuracy}%`;
+                this.dom.resReaction.innerText = `${avgReaction}ms`;
+                this.dom.resCorrect.innerText = this.correct;
+                this.dom.resMissed.innerText = this.missed + this.wrong;
+
+                const failures = Array.from(this.charStats.entries())
+                    .filter(([c, s]) => s.fail > 0)
+                    .sort((a, b) => b[1].fail - a[1].fail)
+                    .slice(0, 3)
+                    .map(([c, s]) => `${c === ' ' ? 'Space' : c}`);
+                
+                this.dom.hardestChars.innerText = failures.length ? `Challenging keys: ${failures.join(', ')}` : "Excellent performance on all keys!";
+                
+                this.dom.resultScreen.classList.remove('hidden');
+                this.playSound(440, 'sine', 0.5);
+            }
+        }
+
+        window.onload = () => { new Game(); };
+    </script>
+</body>
+</html>

@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Neon Wave | Modern Arcade - BITSTART.CLUB</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y48JGFP9V9"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+    
+      gtag('config', 'G-Y48JGFP9V9');
+    </script>  
+  
+    <style>
+        :root {
+            --modern-pink: #ec4899;
+            --bg-deep: #050010;
+            --neon-glow: rgba(236, 72, 153, 0.4);
+        }
+
+        body { 
+            background-color: var(--bg-deep); 
+            color: #fff; 
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .font-game { font-family: 'Orbitron', sans-serif; }
+
+        /* Modern UI Tokens */
+        .glass-card {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(236, 72, 153, 0.2);
+            box-shadow: 0 0 20px rgba(236, 72, 153, 0.1);
+        }
+
+        .neon-text { text-shadow: 0 0 10px var(--modern-pink); }
+        .neon-border { border: 2px solid var(--modern-pink); box-shadow: 0 0 15px var(--neon-glow); }
+
+        .game-container {
+            position: relative;
+            width: 100%;
+            height: 60vh;
+            background: #000;
+            border-radius: 1rem;
+            overflow: hidden;
+            touch-action: none;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        .scanlines {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, transparent 50%, rgba(236, 72, 153, 0.02) 50%);
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        .ad-placeholder {
+            border: 1px dashed rgba(236, 72, 153, 0.2);
+            background: rgba(236, 72, 153, 0.03);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1rem;
+            color: rgba(236, 72, 153, 0.4);
+        }
+
+        /* Overlay Styles */
+        .game-overlay {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: rgba(5, 0, 16, 0.95);
+            z-index: 50;
+            transition: opacity 0.3s;
+        }
+
+        .btn-modern {
+            background: transparent;
+            border: 2px solid var(--modern-pink);
+            color: var(--modern-pink);
+            padding: 0.75rem 2.5rem;
+            font-family: 'Orbitron', sans-serif;
+            text-transform: uppercase;
+            font-weight: 900;
+            letter-spacing: 2px;
+            transition: all 0.2s;
+            box-shadow: 0 0 10px rgba(236, 72, 153, 0.2);
+        }
+
+        .btn-modern:hover {
+            background: var(--modern-pink);
+            color: #000;
+            box-shadow: 0 0 25px var(--modern-pink);
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Header -->
+    <header class="bg-[#0f172a]/80 border-b border-pink-900/50 z-50 backdrop-blur-md">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <a href="../index.html" class="text-2xl md:text-3xl font-black font-game text-[#ec4899] tracking-widest neon-text">BITSTART<span class="text-white">.CLUB</span></a>
+            <nav class="hidden md:flex space-x-8">
+                <a href="../index.html" class="text-sm font-bold uppercase hover:text-[#ec4899] transition">Home</a>
+                <a href="../learning.html" class="text-sm font-bold uppercase hover:text-[#ec4899] transition">Learning</a>
+                <a href="../classic.html" class="text-sm font-bold uppercase hover:text-[#ec4899] transition">Classic</a>
+                <a href="../modern.html" class="text-sm font-bold uppercase text-[#ec4899]">Modern</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="flex-grow container mx-auto px-4 py-8">
+        <div class="flex flex-col lg:flex-row gap-8">
+            
+            <!-- Game Section -->
+            <div class="lg:w-3/4 flex flex-col gap-6">
+                <div class="glass-card p-6 rounded-3xl neon-border relative">
+                    <div class="flex justify-between items-center mb-4">
+                        <div class="font-game text-xs text-[#ec4899] uppercase tracking-widest">System: Online</div>
+                        <div id="progress-text" class="font-game text-lg text-white neon-text">PROGRESS: 0%</div>
+                    </div>
+
+                    <div class="game-container">
+                        <div class="scanlines"></div>
+                        <canvas id="gameCanvas"></canvas>
+
+                        <!-- Start Overlay -->
+                        <div id="startOverlay" class="game-overlay">
+                            <h2 class="text-4xl md:text-6xl font-game font-black text-[#ec4899] mb-4 neon-text uppercase">Neon Wave</h2>
+                            <p class="text-gray-400 mb-8 font-light tracking-widest uppercase text-xs">Hold to Ascend • Release to Descend</p>
+                            <button id="startBtn" class="btn-modern">Initialize</button>
+                        </div>
+
+                        <!-- Game Over Overlay -->
+                        <div id="endOverlay" class="game-overlay hidden">
+                            <h2 id="endTitle" class="text-4xl font-game font-black text-[#ec4899] mb-4 uppercase">System Crash</h2>
+                            <p id="endStats" class="text-white mb-8 font-game text-sm uppercase tracking-wider"></p>
+                            <button id="restartBtn" class="btn-modern">Reboot</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Technical/General Info Block -->
+                <div class="glass-card p-8 rounded-3xl border border-white/5">
+                    <h3 class="font-game text-xl text-[#ec4899] mb-4 uppercase">Modern Arcade Games</h3>
+                    <div class="space-y-4 text-sm text-gray-400 leading-relaxed">
+                        <p><strong>Neon Wave</strong> belongs to the genre of high-speed reaction arcade games. These games emphasize rhythm, spatial awareness, and the ability to maintain flow under increasing difficulty. Unlike classic arcades, modern versions utilize procedural generation to ensure every session presents a unique topographical challenge.</p>
+                        <p>Movement in these environments is often governed by simple physics-based rules—such as buoyancy or gravity—requiring players to master momentum rather than just simple directional input. The aesthetic is heavily influenced by vaporwave and cyberpunk cultures, where visual feedback is as important as the mechanics themselves.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <aside class="lg:w-1/4 flex flex-col gap-6">
+                <!-- Ad Banner Block -->
+                <div class="ad-placeholder h-48 rounded-3xl">
+                    <div class="text-center p-4">
+                        <p class="font-game text-[10px] mb-2 text-[#ec4899]">Cybernetic Promotion</p>
+                        <p class="text-[9px] text-gray-500">Premium Hardware for High-Speed Neural Navigation</p>
+                    </div>
+                </div>
+                
+                <!-- Educational Value Block -->
+                <div class="glass-card p-6 rounded-3xl border border-white/5">
+                    <h4 class="font-game text-xs text-[#ec4899] mb-4 uppercase tracking-widest">Cognitive Benefits</h4>
+                    <ul class="space-y-4 text-[11px] text-gray-400 uppercase leading-normal">
+                        <li>
+                            <span class="text-white block mb-1">Neural Plasticity</span>
+                            Improving the brain's ability to process visual information and execute motor responses simultaneously.
+                        </li>
+                        <li>
+                            <span class="text-white block mb-1">Focus & Flow</span>
+                            Training the mind to enter a "flow state," which enhances concentration and reduces perceived mental fatigue.
+                        </li>
+                        <li>
+                            <span class="text-white block mb-1">Spatial Reaction</span>
+                            Enhancing hand-eye coordination by navigating narrow corridors at high velocities.
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="ad-placeholder h-64 rounded-3xl">ADVERTISING BLOCK</div>
+            </aside>
+        </div>
+    </main>
+
+    <footer class="bg-[#050010] border-t border-pink-900/20 py-8 mt-12">
+        <div class="container mx-auto px-4 text-center">
+            <p class="text-[10px] text-gray-600 uppercase tracking-[0.4em]">© 2026 BITSTART.CLUB • MODERN ARCADE DIVISION</p>
+        </div>
+    </footer>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const startOverlay = document.getElementById('startOverlay');
+        const endOverlay = document.getElementById('endOverlay');
+        const progressDisplay = document.getElementById('progress-text');
+
+        // Audio System
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const Sound = {
+            play(freq, type, dur, vol = 0.05) {
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                gain.gain.setValueAtTime(vol, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + dur);
+            }
+        };
+
+        const CONFIG = {
+            TILE_SIZE: 40,
+            SPEED_X: 7,
+            SPEED_Y: 7,
+            LEVEL_HEIGHT: 20,
+            LEVEL_LENGTH: 1200,
+            TRAIL_MAX: 15
+        };
+
+        const TILE = { EMPTY: 0, BLOCK: 1, SPIKE_UP: 2, SPIKE_DOWN: 3, FINISH: 9 };
+        let levelMap = [];
+        let player, camera, gameState, frame;
+
+        function generateLevel() {
+            // Re-initializing full map
+            levelMap = Array.from({ length: CONFIG.LEVEL_LENGTH }, () => new Array(CONFIG.LEVEL_HEIGHT).fill(TILE.EMPTY));
+            let currentCeil = 4;
+            let currentFloor = 16;
+
+            for (let x = 0; x < CONFIG.LEVEL_LENGTH; x++) {
+                // Fixed outer walls
+                levelMap[x][0] = TILE.BLOCK;
+                levelMap[x][CONFIG.LEVEL_HEIGHT - 1] = TILE.BLOCK;
+
+                if (x > 30 && x < CONFIG.LEVEL_LENGTH - 40) {
+                    const diff = x / CONFIG.LEVEL_LENGTH;
+                    const tunnelH = Math.max(5, Math.floor(11 - diff * 5));
+                    
+                    // Continuously update ceiling and floor for every x to ensure no gaps
+                    if (x % 4 === 0) {
+                        currentCeil += Math.floor((Math.random() - 0.5) * 3);
+                        currentCeil = Math.max(1, Math.min(CONFIG.LEVEL_HEIGHT - tunnelH - 2, currentCeil));
+                        currentFloor = currentCeil + tunnelH;
+                    }
+                    
+                    for (let y = 1; y < CONFIG.LEVEL_HEIGHT - 1; y++) {
+                        if (y < currentCeil || y > currentFloor) {
+                            levelMap[x][y] = TILE.BLOCK;
+                        }
+                    }
+
+                    // Periodic Spikes
+                    if (x % 20 === 0 && Math.random() < 0.2 + diff * 0.4) {
+                        if (Math.random() > 0.5) levelMap[x][currentFloor] = TILE.SPIKE_UP;
+                        else levelMap[x][currentCeil - 1] = TILE.SPIKE_DOWN;
+                    }
+                }
+
+                if (x >= CONFIG.LEVEL_LENGTH - 15) {
+                    for (let y = 1; y < CONFIG.LEVEL_HEIGHT - 1; y++) levelMap[x][y] = TILE.FINISH;
+                }
+            }
+        }
+
+        function init() {
+            resize();
+            gameState = 'MENU';
+            frame = 0;
+            player = { x: 200, y: 0, dy: 0, trail: [], input: false };
+            camera = { x: 0, y: 0 };
+            generateLevel();
+            requestAnimationFrame(loop);
+        }
+
+        function resize() {
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = canvas.parentElement.clientHeight;
+        }
+
+        function startGame() {
+            player.x = 200;
+            player.y = (CONFIG.LEVEL_HEIGHT / 2) * CONFIG.TILE_SIZE;
+            player.trail = [];
+            gameState = 'PLAYING';
+            startOverlay.classList.add('hidden');
+            endOverlay.classList.add('hidden');
+            Sound.play(440, 'sine', 0.5);
+        }
+
+        function update() {
+            if (gameState !== 'PLAYING') return;
+
+            player.x += CONFIG.SPEED_X;
+            player.dy = player.input ? -CONFIG.SPEED_Y : CONFIG.SPEED_Y;
+            player.y += player.dy;
+
+            player.trail.push({ x: player.x, y: player.y });
+            if (player.trail.length > CONFIG.TRAIL_MAX) player.trail.shift();
+
+            camera.x = player.x - 200;
+            camera.y += (player.y - canvas.height / 2 - camera.y) * 0.1;
+
+            checkCollisions();
+            
+            const prog = Math.floor((player.x / (CONFIG.LEVEL_LENGTH * CONFIG.TILE_SIZE)) * 100);
+            progressDisplay.innerText = `PROGRESS: ${Math.min(100, prog)}%`;
+        }
+
+        function checkCollisions() {
+            const tx = Math.floor(player.x / CONFIG.TILE_SIZE);
+            const ty = Math.floor(player.y / CONFIG.TILE_SIZE);
+
+            if (ty < 0 || ty >= CONFIG.LEVEL_HEIGHT || tx < 0) return die();
+            
+            const tile = levelMap[tx] ? levelMap[tx][ty] : TILE.EMPTY;
+            if (tile === TILE.BLOCK || tile === TILE.SPIKE_UP || tile === TILE.SPIKE_DOWN) die();
+            if (tile === TILE.FINISH) win();
+        }
+
+        function die() {
+            gameState = 'OVER';
+            Sound.play(100, 'sawtooth', 0.4, 0.1);
+            document.getElementById('endTitle').innerText = "SYSTEM CRASH";
+            document.getElementById('endTitle').style.color = "#ec4899";
+            document.getElementById('endStats').innerText = `Distance: ${Math.floor(player.x / 10)}m`;
+            endOverlay.classList.remove('hidden');
+        }
+
+        function win() {
+            gameState = 'OVER';
+            Sound.play(880, 'sine', 0.5, 0.1);
+            document.getElementById('endTitle').innerText = "MISSION COMPLETE";
+            document.getElementById('endTitle').style.color = "#ec4899";
+            document.getElementById('endStats').innerText = "Network hijacked. Access granted.";
+            endOverlay.classList.remove('hidden');
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.save();
+            ctx.translate(-camera.x, -camera.y);
+
+            const startX = Math.floor(camera.x / CONFIG.TILE_SIZE);
+            const endX = startX + Math.ceil(canvas.width / CONFIG.TILE_SIZE) + 2;
+
+            for (let x = startX; x < endX; x++) {
+                if (!levelMap[x]) continue;
+                for (let y = 0; y < CONFIG.LEVEL_HEIGHT; y++) {
+                    const tile = levelMap[x][y];
+                    if (tile === TILE.EMPTY) continue;
+                    
+                    const px = x * CONFIG.TILE_SIZE;
+                    const py = y * CONFIG.TILE_SIZE;
+
+                    if (tile === TILE.BLOCK) {
+                        ctx.strokeStyle = 'rgba(236, 72, 153, 0.5)';
+                        ctx.lineWidth = 1;
+                        ctx.strokeRect(px + 1, py + 1, CONFIG.TILE_SIZE - 2, CONFIG.TILE_SIZE - 2);
+                    } else if (tile === TILE.SPIKE_UP || tile === TILE.SPIKE_DOWN) {
+                        ctx.fillStyle = '#ec4899';
+                        ctx.beginPath();
+                        if (tile === TILE.SPIKE_UP) {
+                            ctx.moveTo(px, py + CONFIG.TILE_SIZE);
+                            ctx.lineTo(px + CONFIG.TILE_SIZE / 2, py);
+                            ctx.lineTo(px + CONFIG.TILE_SIZE, py + CONFIG.TILE_SIZE);
+                        } else {
+                            ctx.moveTo(px, py);
+                            ctx.lineTo(px + CONFIG.TILE_SIZE / 2, py + CONFIG.TILE_SIZE);
+                            ctx.lineTo(px + CONFIG.TILE_SIZE, py);
+                        }
+                        ctx.fill();
+                    } else if (tile === TILE.FINISH) {
+                        ctx.fillStyle = 'rgba(0, 255, 0, 0.3)';
+                        ctx.fillRect(px, py, CONFIG.TILE_SIZE, CONFIG.TILE_SIZE);
+                    }
+                }
+            }
+
+            if (gameState !== 'MENU') {
+                // Trail
+                if (player.trail.length > 1) {
+                    ctx.beginPath();
+                    ctx.strokeStyle = '#ec4899';
+                    ctx.lineWidth = 4;
+                    ctx.moveTo(player.trail[0].x, player.trail[0].y);
+                    player.trail.forEach(p => ctx.lineTo(p.x, p.y));
+                    ctx.stroke();
+                }
+
+                // Player icon
+                ctx.save();
+                ctx.translate(player.x, player.y);
+                const angle = Math.atan2(player.dy, CONFIG.SPEED_X);
+                ctx.rotate(angle);
+                ctx.fillStyle = '#fff';
+                ctx.shadowBlur = 15;
+                ctx.shadowColor = '#ec4899';
+                ctx.beginPath();
+                ctx.moveTo(12, 0);
+                ctx.lineTo(-10, 8);
+                ctx.lineTo(-6, 0);
+                ctx.lineTo(-10, -8);
+                ctx.fill();
+                ctx.restore();
+            }
+
+            ctx.restore();
+        }
+
+        function loop() {
+            update();
+            draw();
+            frame++;
+            requestAnimationFrame(loop);
+        }
+
+        // Input Handling
+        const handleDown = (e) => { e.preventDefault(); player.input = true; if (gameState === 'PLAYING') Sound.play(300, 'sine', 0.1); };
+        const handleUp = (e) => { e.preventDefault(); player.input = false; };
+        
+        window.addEventListener('mousedown', handleDown);
+        window.addEventListener('mouseup', handleUp);
+        window.addEventListener('touchstart', handleDown);
+        window.addEventListener('touchend', handleUp);
+        window.addEventListener('keydown', (e) => { if (e.code === 'Space' || e.code === 'ArrowUp') player.input = true; });
+        window.addEventListener('keyup', (e) => { if (e.code === 'Space' || e.code === 'ArrowUp') player.input = false; });
+
+        document.getElementById('startBtn').onclick = startGame;
+        document.getElementById('restartBtn').onclick = startGame;
+        window.addEventListener('resize', resize);
+
+        init();
+    </script>
+</body>
+</html>

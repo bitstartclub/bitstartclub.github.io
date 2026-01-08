@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
     <!-- SEO Meta Tags -->
     <title>Cyber Pong | History & 2-Player Arcade - BITSTART.CLUB</title>
@@ -22,7 +22,7 @@
     
       gtag('config', 'G-Y48JGFP9V9');
     </script>  
-  
+    
     <style>
         body { font-family: 'Inter', sans-serif; background: #0b0f1a; color: #f3f4f6; overflow-x: hidden; }
         .font-game { font-family: 'Orbitron', sans-serif; }
@@ -34,10 +34,11 @@
         canvas {
             width: 100%;
             height: auto;
+            max-height: 70vh; /* Prevents canvas from pushing content off-screen */
             background: #0a0a1a;
             display: block;
             border-radius: 12px;
-            touch-action: none;
+            touch-action: none; /* Disables browser handling of all touch gestures */
         }
 
         .game-over {
@@ -48,14 +49,21 @@
             display: none;
             z-index: 100;
         }
+
+        /* Mobile optimization to keep game elements visible */
+        @media (max-height: 700px) {
+            .header-nav { display: none; }
+            .top-ad { display: none; }
+            .main-container { padding-top: 1rem; }
+        }
     </style>
 </head>
 <body class="flex flex-col min-h-screen">
 
     <!-- Header -->
-    <header class="bg-[#0f172a]/80 border-b border-indigo-900/50 sticky top-0 z-50 backdrop-blur-md">
-        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-            <a href="../index.html" class="text-3xl font-black font-game text-indigo-500 tracking-widest">BITSTART<span class="text-white">.CLUB</span></a>
+    <header class="bg-[#0f172a]/80 border-b border-indigo-900/50 sticky top-0 z-50 backdrop-blur-md header-nav">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <a href="../index.html" class="text-2xl md:text-3xl font-black font-game text-indigo-500 tracking-widest">BITSTART<span class="text-white">.CLUB</span></a>
             <nav class="hidden md:flex space-x-8">
                 <a href="../index.html" class="text-sm font-bold uppercase hover:text-indigo-400 transition">Home</a>
                 <a href="../learning.html" class="text-sm font-bold uppercase hover:text-indigo-400 transition">Learning</a>
@@ -66,28 +74,28 @@
     </header>
 
     <!-- Top Ad -->
-    <div class="container mx-auto px-4 mt-6">
-        <div class="ad-placeholder w-full h-20 flex items-center justify-center rounded-2xl">
+    <div class="container mx-auto px-4 mt-4 top-ad">
+        <div class="ad-placeholder w-full h-16 md:h-20 flex items-center justify-center rounded-2xl">
             <span class="text-green-900 font-bold uppercase tracking-widest text-[10px]">Top Leaderboard Ad</span>
         </div>
     </div>
 
-    <main class="flex-grow container mx-auto px-4 py-8">
-        <div class="flex flex-col lg:flex-row gap-8">
+    <main class="flex-grow container mx-auto px-2 md:px-4 py-4 md:py-8 main-container">
+        <div class="flex flex-col lg:flex-row gap-6 md:gap-8">
             
             <!-- Game Main Area -->
             <div class="flex-grow">
-                <div class="glass-card p-4 md:p-8 rounded-3xl neon-border relative mb-8">
+                <div class="glass-card p-3 md:p-6 rounded-3xl neon-border relative mb-6">
                     
                     <!-- Score Board -->
-                    <div class="flex justify-around mb-6 font-game">
+                    <div class="flex justify-around mb-4 font-game">
                         <div class="text-center">
-                            <div class="text-xs text-gray-500 uppercase">Player 1 (W/S)</div>
-                            <div class="text-4xl font-black text-green-400" id="score1">0</div>
+                            <div class="text-[10px] text-gray-500 uppercase">Player 1 (W/S)</div>
+                            <div class="text-3xl md:text-4xl font-black text-green-400" id="score1">0</div>
                         </div>
                         <div class="text-center">
-                            <div class="text-xs text-gray-500 uppercase">Player 2 (UP/DN)</div>
-                            <div class="text-4xl font-black text-green-400" id="score2">0</div>
+                            <div class="text-[10px] text-gray-500 uppercase">Player 2 (UP/DN)</div>
+                            <div class="text-3xl md:text-4xl font-black text-green-400" id="score2">0</div>
                         </div>
                     </div>
 
@@ -96,40 +104,40 @@
                         <canvas id="gameCanvas"></canvas>
                         
                         <!-- Game Over Screen -->
-                        <div id="gameOver" class="game-over glass-card p-10 rounded-3xl text-center border-2 border-green-500 w-[90%] md:w-[400px]">
-                            <h2 class="text-3xl font-game font-bold text-green-400 mb-4 uppercase">Match Over</h2>
-                            <p id="winnerDisplay" class="text-white mb-8 font-bold"></p>
-                            <button onclick="resetGame()" class="bg-green-600 hover:bg-green-500 text-white font-game font-bold px-10 py-4 rounded-2xl transition w-full">PLAY AGAIN</button>
+                        <div id="gameOver" class="game-over glass-card p-6 md:p-10 rounded-3xl text-center border-2 border-green-500 w-[90%] md:w-[400px]">
+                            <h2 class="text-2xl md:text-3xl font-game font-bold text-green-400 mb-4 uppercase">Match Over</h2>
+                            <p id="winnerDisplay" class="text-white mb-6 md:mb-8 font-bold"></p>
+                            <button onclick="resetGame()" class="bg-green-600 hover:bg-green-500 text-white font-game font-bold px-8 py-3 md:py-4 rounded-2xl transition w-full">PLAY AGAIN</button>
                         </div>
                     </div>
 
                     <!-- Controls / Start -->
-                    <div class="mt-8 flex flex-col items-center">
-                        <button id="startBtn" class="bg-white text-black font-game font-bold px-12 py-4 rounded-2xl hover:bg-green-400 transition active:scale-95">START MATCH</button>
-                        <p class="mt-6 text-[10px] text-gray-500 uppercase tracking-widest text-center">
-                            P1: W/S Keys &bull; P2: Arrow Up/Down Keys<br>
+                    <div class="mt-4 md:mt-8 flex flex-col items-center">
+                        <button id="startBtn" class="bg-white text-black font-game font-bold px-10 md:px-12 py-3 md:py-4 rounded-2xl hover:bg-green-400 transition active:scale-95">START MATCH</button>
+                        <p class="mt-4 text-[9px] md:text-[10px] text-gray-500 uppercase tracking-widest text-center">
+                            P1: W/S Keys &bull; P2: Arrow Keys<br>
                             First to 5 points wins
                         </p>
                     </div>
                 </div>
 
                 <!-- History Section -->
-                <div class="glass-card p-8 rounded-3xl border border-white/5">
-                    <h2 class="text-2xl font-game font-bold text-indigo-400 mb-6 uppercase tracking-wider">The History of Pong</h2>
-                    <div class="space-y-4 text-gray-300 leading-relaxed text-sm md:text-base">
+                <div class="glass-card p-6 md:p-8 rounded-3xl border border-white/5">
+                    <h2 class="text-xl md:text-2xl font-game font-bold text-indigo-400 mb-4 md:mb-6 uppercase tracking-wider">The History of Pong</h2>
+                    <div class="space-y-4 text-gray-300 leading-relaxed text-xs md:text-base">
                         <p>
                             <strong>Pong</strong> is one of the earliest arcade video games and the first to reach mainstream popularity. Released by <strong>Atari</strong> on November 29, 1972, it effectively launched the video game industry as we know it today.
                         </p>
                         <p>
-                            The game was developed by engineer <strong>Allan Alcorn</strong> as a training exercise. Atari co-founder Nolan Bushnell assigned him the task of creating a simple tennis game. While the concept wasn't entirely new (a similar game existed on the Magnavox Odyssey), Alcorn's execution and the addition of sound effects made it legendary.
+                            The game was developed by engineer <strong>Allan Alcorn</strong> as a training exercise. Atari co-founder Nolan Bushnell assigned him the task of creating a simple tennis game.
                         </p>
                         <div class="bg-black/30 p-4 rounded-xl border-l-4 border-green-500 my-4">
-                            <p class="italic text-xs">
-                                Fun Fact: When the first Pong prototype was installed at Andy Capp's Tavern, it broke down within days. The reason? The coin mechanism was jammed because it was literally overflowing with quarters from eager players.
+                            <p class="italic text-[10px] md:text-xs text-gray-400">
+                                Fun Fact: When the first Pong prototype was installed at Andy Capp's Tavern, it broke down within days because the coin mechanism was literally overflowing with quarters from eager players.
                             </p>
                         </div>
                         <p>
-                            The success of Pong led to numerous clones, eventually prompting Atari to release a home version in 1975 through Sears. This marked the beginning of the home console era. On our site, we pay tribute to this classic by using modern web technologies to recreate that authentic neon arcade feel.
+                            The success of Pong led to numerous clones, eventually prompting Atari to release a home version in 1975 through Sears. This marked the beginning of the home console era.
                         </p>
                     </div>
                 </div>
@@ -138,20 +146,20 @@
             <!-- Right Sidebar Content -->
             <aside class="w-full lg:w-1/4 space-y-6">
                 <div class="glass-card p-6 rounded-3xl border border-green-900/50">
-                    <h3 class="font-game text-xs font-bold text-green-400 mb-4 uppercase">Classic Library</h3>
+                    <h3 class="font-game text-xs font-bold text-green-400 mb-4 uppercase text-center md:text-left">Classic Library</h3>
                     <ul class="space-y-3 text-sm">
                         <li class="flex items-center gap-2 text-green-400 font-bold tracking-tight"><div class="w-1.5 h-1.5 rounded-full bg-green-500"></div> Cyber Pong</li>
                         <li><a href="snake.html" class="hover:text-green-400 transition">Neon Snake</a></li>
                         <li><a href="#" class="text-gray-600 cursor-not-allowed">Retro Arkanoid</a></li>
                     </ul>
                 </div>
-                <div class="ad-placeholder h-64 flex items-center justify-center rounded-3xl">
-                    <span class="text-green-900 font-bold uppercase tracking-widest text-[10px]">Sidebar Square Ad</span>
+                <div class="ad-placeholder h-48 md:h-64 flex items-center justify-center rounded-3xl">
+                    <span class="text-green-900 font-bold uppercase tracking-widest text-[10px]">Sidebar Ad</span>
                 </div>
-                <div class="glass-card p-6 rounded-3xl border border-indigo-900/50">
+                <div class="glass-card p-6 rounded-3xl border border-indigo-900/50 hidden md:block">
                     <h4 class="text-xs font-bold uppercase text-indigo-400 mb-2">Educational Value</h4>
                     <p class="text-[10px] text-gray-500 leading-tight">
-                        Playing Pong helps improve reaction speed and hand-eye coordination. It is a prime example of how simple mechanics can remain engaging for decades.
+                        Playing Pong helps improve reaction speed and hand-eye coordination. It is a prime example of how simple mechanics remain engaging for decades.
                     </p>
                 </div>
             </aside>
@@ -159,14 +167,14 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-[#0f172a] border-t border-indigo-900/50 py-12 mt-12">
+    <footer class="bg-[#0f172a] border-t border-indigo-900/50 py-8 mt-12">
         <div class="container mx-auto px-4 text-center">
-            <div class="flex justify-center space-x-8 text-[10px] font-bold uppercase tracking-widest text-gray-600 mb-6">
+            <div class="flex justify-center space-x-6 md:space-x-8 text-[9px] font-bold uppercase tracking-widest text-gray-600 mb-6">
                 <a href="../privacy.html" class="hover:text-green-400 transition">Privacy</a>
                 <a href="../terms.html" class="hover:text-green-400 transition">Terms</a>
                 <a href="../contact.html" class="hover:text-green-400 transition">Support</a>
             </div>
-            <p class="text-[10px] text-gray-800 uppercase tracking-[0.3em]">© 2026 BITSTART.CLUB • PROUDLY NO-DATA</p>
+            <p class="text-[9px] text-gray-800 uppercase tracking-[0.3em]">© 2026 BITSTART.CLUB • PROUDLY NO-DATA</p>
         </div>
     </footer>
 
@@ -194,6 +202,7 @@
 
         function initCanvas() {
             const dpr = window.devicePixelRatio || 1;
+            // Set canvas drawing buffer size
             canvas.width = size.w * dpr;
             canvas.height = size.h * dpr;
             ctx.scale(dpr, dpr);
@@ -330,13 +339,19 @@
             ArrowUp: () => p2.up = false, ArrowDown: () => p2.down = false
         };
 
-        document.addEventListener('keydown', e => keys[e.key]?.());
-        document.addEventListener('keyup', e => uKeys[e.key]?.());
+        // Added event.preventDefault() to block scrolling
+        document.addEventListener('keydown', e => {
+            if (keys[e.key]) {
+                e.preventDefault();
+                keys[e.key]();
+            }
+        });
 
-        startBtn.onclick = () => {
-            startBtn.style.display = "none";
-            resetGame();
-        };
+        document.addEventListener('keyup', e => {
+            if (uKeys[e.key]) {
+                uKeys[e.key]();
+            }
+        });
 
         window.addEventListener('resize', initCanvas);
         initCanvas();

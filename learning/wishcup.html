@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <!-- SEO Meta Tags -->
+    <title>Magic Maze | Fine Motor Skills Trainer - BITSTART.CLUB</title>
+    <meta name="description" content="Master mouse precision and fine motor control with our interactive Magic Maze trainer. Designed for cognitive development and digital literacy.">
+    <meta name="keywords" content="mouse trainer, fine motor skills, maze game, educational games, computer literacy, bitstart club">
+    <link rel="canonical" href="https://bitstart.club/learning/maze.html">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y48JGFP9V9"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+    
+      gtag('config', 'G-Y48JGFP9V9');
+    </script>  
+  
+    <style>
+        body { font-family: 'Inter', sans-serif; background: #0b0f1a; color: #f3f4f6; overflow-x: hidden; }
+        .font-game { font-family: 'Orbitron', sans-serif; }
+        .glass-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .neon-text { text-shadow: 0 0 10px rgba(129, 140, 248, 0.8); }
+        .neon-border { border: 2px solid #818cf8; box-shadow: 0 0 15px rgba(129, 140, 248, 0.4); }
+        .ad-placeholder { border: 1px dashed rgba(129, 140, 248, 0.3); background: rgba(15, 23, 42, 0.5); }
+        
+        .game-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            aspect-ratio: 1.5 / 1;
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+            touch-action: none;
+            cursor: crosshair;
+        }
+
+        .overlay-screen {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 100;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .shake { animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both; }
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
+        }
+
+        .pill { background: rgba(30, 41, 59, 0.8); border: 1px solid rgba(255, 255, 255, 0.1); }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <header class="bg-[#0f172a]/80 border-b border-indigo-900/50 z-50 backdrop-blur-md">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <a href="../index.html" class="text-2xl md:text-3xl font-black font-game text-indigo-500 tracking-widest neon-text">BITSTART<span class="text-white">.CLUB</span></a>
+            <nav class="hidden md:flex space-x-8">
+                <a href="../index.html" class="text-sm font-bold uppercase hover:text-indigo-400 transition">Home</a>
+                <a href="../learning.html" class="text-sm font-bold uppercase text-indigo-400">Learning</a>
+                <a href="../classic.html" class="text-sm font-bold uppercase hover:text-indigo-400 transition">Classic</a>
+                <a href="../modern.html" class="text-sm font-bold uppercase hover:text-indigo-400 transition">Modern</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="flex-grow container mx-auto px-2 md:px-4 py-4">
+        <div class="flex flex-col lg:flex-row gap-6">
+            
+            <div class="flex-grow lg:w-3/4">
+                <div class="glass-card p-4 md:p-6 rounded-3xl neon-border relative mb-6">
+                    <div class="flex justify-between mb-4 font-game px-4">
+                        <div class="text-left">
+                            <div class="text-[10px] text-gray-500 uppercase">Stage</div>
+                            <div id="levelDisplay" class="text-xl md:text-2xl font-black text-indigo-400">1 / 10</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-[10px] text-gray-500 uppercase">Target</div>
+                            <div class="text-xl md:text-2xl font-black text-amber-400">Wish Cup</div>
+                        </div>
+                    </div>
+
+                    <div id="gameRegion" class="game-wrapper border border-white/5">
+                        <canvas id="gameCanvas" width="600" height="400"></canvas>
+                        
+                        <div id="overlay" class="overlay-screen">
+                            <div class="mb-4 text-6xl text-indigo-500 animate-bounce"><i class="fa-solid fa-hat-wizard"></i></div>
+                            <h2 id="overlayTitle" class="text-3xl font-game font-bold text-white mb-2 uppercase">Welcome, Adept</h2>
+                            <p id="overlayMessage" class="text-gray-400 mb-8 max-w-xs">Guide the spark to the Wish Cup without touching the boundaries.</p>
+                            <button id="startBtn" class="bg-indigo-600 text-white font-game font-bold px-12 py-4 rounded-2xl hover:bg-indigo-500 transition active:scale-95 uppercase tracking-widest shadow-lg shadow-indigo-500/20">Begin Trial</button>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 text-center text-[10px] font-game text-gray-500 uppercase tracking-widest">
+                        Hold and drag the spark to navigate the maze
+                    </div>
+                </div>
+
+                <div class="glass-card p-6 md:p-8 rounded-3xl border border-white/5">
+                    <h2 class="text-xl font-game font-bold text-indigo-400 mb-6 uppercase tracking-wider">The History of Mouse Precision</h2>
+                    <div class="space-y-4 text-gray-300 leading-relaxed text-sm">
+                        <p>The computer mouse was invented by <strong>Douglas Engelbart</strong> in 1964. Early graphical user interfaces (GUIs) required users to develop entirely new motor skills to translate physical movement into digital coordinates.</p>
+                        <p>Games like "Amazing Maze" (1976) were early examples of how interactive software could be used to train users in high-precision spatial tasks. Today, these exercises remain fundamental for developing the hand-eye coordination required for professional software operation.</p>
+                        <div class="bg-indigo-500/10 p-4 rounded-xl border-l-4 border-indigo-500 my-4">
+                            <p class="italic text-xs text-gray-400">Professional Insight: Fine motor skill training has been shown to improve the efficiency of brain-computer interaction by reducing the cognitive load required for simple navigation tasks.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <aside class="w-full lg:w-1/4 space-y-6">
+                <div class="ad-placeholder h-48 flex items-center justify-center rounded-3xl text-[10px] uppercase tracking-widest text-indigo-900 font-bold">Sidebar Ad</div>
+
+                <div class="glass-card p-6 rounded-3xl border border-indigo-900/50">
+                    <h3 class="font-game text-xs font-bold text-indigo-400 mb-4 uppercase">Educational Value</h3>
+                    <ul class="space-y-4 text-[11px] text-gray-400">
+                        <li><strong class="text-gray-200 block mb-1">Fine Motor Control:</strong> Refining the small muscle movements of the hand and wrist.</li>
+                        <li><strong class="text-gray-200 block mb-1">Spatial Reasoning:</strong> Processing 2D paths and boundaries within a digital environment.</li>
+                        <li><strong class="text-gray-200 block mb-1">Predictive Aiming:</strong> Anticipating the trajectory of the pointer relative to obstacles.</li>
+                    </ul>
+                </div>
+
+                <div class="ad-placeholder h-64 flex items-center justify-center rounded-3xl text-[10px] uppercase tracking-widest text-indigo-900 font-bold">Square Ad Unit</div>
+            </aside>
+        </div>
+    </main>
+
+    <footer class="bg-[#0f172a] border-t border-indigo-900/50 py-8 mt-12">
+        <div class="container mx-auto px-4 text-center">
+            <p class="text-[9px] text-gray-800 uppercase tracking-[0.3em]">© 2026 BITSTART.CLUB • THE NO-DATA ZONE</p>
+        </div>
+    </footer>
+
+    <script>
+        'use strict';
+
+        // Ігрові рівні
+        const levels = [
+            ["111111111111111","111111111111111","111111111111111","1S00000000000E1","111111111111111","111111111111111","111111111111111","111111111111111","111111111111111","111111111111111"],
+            ["111111111111111","111111111111111","1S0000001111111","111111101111111","111111101111111","1111111000000E1","111111111111111","111111111111111","111111111111111","111111111111111"],
+            ["111111111111111","111111111111111","1S0011111111111","111001111111111","111100111111111","111110011111111","111111001111111","1111111000000E1","111111111111111","111111111111111"],
+            ["111111111111111","111111111111111","1S00000100000E1","111111010111111","111111010111111","111111010111111","111111000111111","111111111111111","111111111111111","111111111111111"],
+            ["111111111111111","1S0001111111111","111101111111111","111100000111111","111111110111111","111111110111111","111111110000011","111111111111011","1111111111110E1","111111111111111"],
+            ["111111111111111","111111111111111","1S0000011111111","111111000001111","111111111101111","111000000001111","111011111111111","1110000000000E1","111111111111111","111111111111111"],
+            ["111111111111111","1S0011100000011","111011101111011","111000001111001","111111111111101","110000000000001","110111111111111","1100000000000E1","111111111111111","111111111111111"],
+            ["111111111111111","1S0000000000111","111111111110111","111000000010111","111011111010111","11101E000010111","111011111110111","111000000000111","111111111111111","111111111111111"],
+            ["111111111111111","1S0000111111111","111110111111111","111110000000001","100011111111101","101000000000001","101111111111111","100000000011111","1111111110000E1","111111111111111"],
+            ["111111111111111","1S0001100000111","1111011011101E1","110001101110101","110111101110101","110111100010101","110000111010101","111110111010001","111110000011111","111111111111111"]
+        ];
+
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const overlay = document.getElementById('overlay');
+        const levelDisplay = document.getElementById('levelDisplay');
+        const startBtn = document.getElementById('startBtn');
+
+        const CELL_SIZE = 40;
+        const ROWS = 10;
+        const COLS = 15;
+
+        class MagicMaze {
+            constructor() {
+                this.currentLevel = 0;
+                this.isDragging = false;
+                this.isGameStarted = false;
+                this.player = { x: 0, y: 0, r: 12 };
+                this.startPos = { x: 0, y: 0 };
+                this.endPos = { x: 0, y: 0 };
+                this.grid = [];
+                this.init();
+            }
+
+            init() {
+                startBtn.onclick = () => {
+                    overlay.classList.add('hidden');
+                    this.isGameStarted = true;
+                    this.loadLevel(this.currentLevel);
+                };
+
+                window.addEventListener('mousedown', (e) => this.handleStart(e));
+                window.addEventListener('mousemove', (e) => this.handleMove(e));
+                window.addEventListener('mouseup', () => this.handleEnd());
+                
+                canvas.addEventListener('touchstart', (e) => this.handleStart(e), { passive: false });
+                canvas.addEventListener('touchmove', (e) => this.handleMove(e), { passive: false });
+                window.addEventListener('touchend', () => this.handleEnd());
+            }
+
+            loadLevel(index) {
+                if (index >= levels.length) {
+                    this.isGameStarted = false;
+                    this.showOverlay("Ascension!", "You have mastered the Maze of Trials.", "Restart");
+                    this.currentLevel = 0;
+                    return;
+                }
+                this.grid = levels[index];
+                for (let r = 0; r < ROWS; r++) {
+                    for (let c = 0; c < COLS; c++) {
+                        const cell = this.grid[r][c];
+                        if (cell === 'S') {
+                            this.startPos = { x: c * CELL_SIZE + CELL_SIZE / 2, y: r * CELL_SIZE + CELL_SIZE / 2 };
+                            this.player.x = this.startPos.x;
+                            this.player.y = this.startPos.y;
+                        } else if (cell === 'E') {
+                            this.endPos = { x: c * CELL_SIZE + CELL_SIZE / 2, y: r * CELL_SIZE + CELL_SIZE / 2 };
+                        }
+                    }
+                }
+                this.isDragging = false;
+                levelDisplay.textContent = `${index + 1} / 10`;
+                this.render();
+            }
+
+            render() {
+                // Запобіжний захід: якщо сітка ще не завантажена, не малюємо нічого
+                if (!this.grid || this.grid.length === 0) return;
+
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                for (let r = 0; r < ROWS; r++) {
+                    if (!this.grid[r]) continue;
+                    for (let c = 0; c < COLS; c++) {
+                        const cell = this.grid[r][c];
+                        const x = c * CELL_SIZE;
+                        const y = r * CELL_SIZE;
+                        if (cell === '1') {
+                            ctx.fillStyle = "#334155";
+                            ctx.fillRect(x + 1, y + 1, CELL_SIZE - 2, CELL_SIZE - 2);
+                        } else {
+                            ctx.fillStyle = "#0f172a";
+                            ctx.fillRect(x, y, CELL_SIZE, CELL_SIZE);
+                        }
+                    }
+                }
+
+                // Малюємо ціль (Cup Icon)
+                ctx.font = "24px Arial";
+                ctx.textAlign = "center";
+                ctx.textBaseline = "middle";
+                ctx.shadowColor = "#fbbf24";
+                ctx.shadowBlur = 10;
+                ctx.fillText("🏆", this.endPos.x, this.endPos.y);
+                ctx.shadowBlur = 0;
+
+                // Малюємо гравця (Player)
+                const grad = ctx.createRadialGradient(this.player.x, this.player.y, 2, this.player.x, this.player.y, 20);
+                grad.addColorStop(0, "#818cf8");
+                grad.addColorStop(1, "rgba(129, 140, 248, 0)");
+                ctx.fillStyle = grad;
+                ctx.beginPath();
+                ctx.arc(this.player.x, this.player.y, 20, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.fillStyle = this.isDragging ? "#6366f1" : "#818cf8";
+                ctx.beginPath();
+                ctx.arc(this.player.x, this.player.y, this.player.r, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Іконка магічної палички
+                ctx.font = "900 12px 'Font Awesome 6 Free'";
+                ctx.fillStyle = "white";
+                ctx.fillText("\uf0d0", this.player.x, this.player.y);
+            }
+
+            handleStart(e) {
+                if (!this.isGameStarted) return;
+                const pos = this.getPos(e);
+                const dist = Math.hypot(pos.x - this.player.x, pos.y - this.player.y);
+                if (dist < 30) {
+                    this.isDragging = true;
+                    this.render();
+                }
+            }
+
+            handleMove(e) {
+                if (!this.isDragging || !this.isGameStarted) return;
+                e.preventDefault();
+                const pos = this.getPos(e);
+                if (this.checkCollision(pos.x, pos.y)) {
+                    this.fail();
+                } else {
+                    this.player.x = pos.x;
+                    this.player.y = pos.y;
+                    this.render();
+                    if (Math.hypot(this.player.x - this.endPos.x, this.player.y - this.endPos.y) < 15) {
+                        this.win();
+                    }
+                }
+            }
+
+            handleEnd() {
+                if (!this.isGameStarted) return;
+                this.isDragging = false;
+                this.render();
+            }
+
+            getPos(e) {
+                const rect = canvas.getBoundingClientRect();
+                const scaleX = canvas.width / rect.width;
+                const scaleY = canvas.height / rect.height;
+                const cx = e.touches ? e.touches[0].clientX : e.clientX;
+                const cy = e.touches ? e.touches[0].clientY : e.clientY;
+                return { x: (cx - rect.left) * scaleX, y: (cy - rect.top) * scaleY };
+            }
+
+            checkCollision(x, y) {
+                if (!this.grid || this.grid.length === 0) return true;
+                const r = this.player.r - 2;
+                for (let a = 0; a < Math.PI * 2; a += Math.PI / 4) {
+                    const px = x + Math.cos(a) * r;
+                    const py = y + Math.sin(a) * r;
+                    const col = Math.floor(px / CELL_SIZE);
+                    const row = Math.floor(py / CELL_SIZE);
+                    if (col < 0 || col >= COLS || row < 0 || row >= ROWS || !this.grid[row] || this.grid[row][col] === '1') return true;
+                }
+                return false;
+            }
+
+            fail() {
+                this.isDragging = false;
+                canvas.parentElement.classList.add('shake');
+                setTimeout(() => canvas.parentElement.classList.remove('shake'), 500);
+                this.player.x = this.startPos.x;
+                this.player.y = this.startPos.y;
+                this.render();
+            }
+
+            win() {
+                this.isDragging = false;
+                this.currentLevel++;
+                this.loadLevel(this.currentLevel);
+            }
+
+            showOverlay(title, msg, btn) {
+                document.getElementById('overlayTitle').textContent = title;
+                document.getElementById('overlayMessage').textContent = msg;
+                startBtn.textContent = btn;
+                overlay.classList.remove('hidden');
+            }
+        }
+
+        // Запуск гри після завантаження вікна
+        window.onload = () => {
+            new MagicMaze();
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+# Host
+Host: https://bitstart.club
+
+# Sitemap
+Sitemap: https://bitstart.club/sitemap.xml

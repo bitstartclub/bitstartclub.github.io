@@ -2,92 +2,88 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://bitstart.club/</loc>
+    <lastmod>2023-10-27</lastmod>
     <priority>1.0</priority>
     <changefreq>weekly</changefreq>
   </url>
-
   <url>
     <loc>https://bitstart.club/classic.html</loc>
+    <lastmod>2023-10-27</lastmod>
     <priority>0.8</priority>
-    <changefreq>monthly</changefreq>
   </url>
   <url>
     <loc>https://bitstart.club/learning.html</loc>
+    <lastmod>2023-10-27</lastmod>
     <priority>0.8</priority>
-    <changefreq>monthly</changefreq>
   </url>
   <url>
     <loc>https://bitstart.club/modern.html</loc>
+    <lastmod>2023-10-27</lastmod>
     <priority>0.8</priority>
-    <changefreq>monthly</changefreq>
   </url>
-
   <url>
     <loc>https://bitstart.club/classic/snake.html</loc>
+    <lastmod>2023-10-27</lastmod>
     <priority>0.7</priority>
-    <changefreq>monthly</changefreq>
   </url>
   <url>
     <loc>https://bitstart.club/classic/pong.html</loc>
+    <lastmod>2023-10-27</lastmod>
     <priority>0.7</priority>
-    <changefreq>monthly</changefreq>
   </url>
   <url>
     <loc>https://bitstart.club/classic/invaders.html</loc>
+    <lastmod>2023-10-27</lastmod>
     <priority>0.7</priority>
-    <changefreq>monthly</changefreq>
   </url>
   <url>
     <loc>https://bitstart.club/classic/arkanoid.html</loc>
+    <lastmod>2023-10-27</lastmod>
     <priority>0.7</priority>
-    <changefreq>monthly</changefreq>
   </url>
-
   <url>
     <loc>https://bitstart.club/learning/wishcup.html</loc>
+    <lastmod>2023-10-27</lastmod>
     <priority>0.7</priority>
-    <changefreq>monthly</changefreq>
   </url>
   <url>
     <loc>https://bitstart.club/learning/mousegrid.html</loc>
+    <lastmod>2023-10-27</lastmod>
     <priority>0.7</priority>
-    <changefreq>monthly</changefreq>
   </url>
   <url>
     <loc>https://bitstart.club/learning/keymaster.html</loc>
+    <lastmod>2023-10-27</lastmod>
     <priority>0.7</priority>
-    <changefreq>monthly</changefreq>
   </url>
   <url>
     <loc>https://bitstart.club/learning/dexterity.html</loc>
+    <lastmod>2023-10-27</lastmod>
     <priority>0.7</priority>
-    <changefreq>monthly</changefreq>
   </url>
-
   <url>
     <loc>https://bitstart.club/modern/neonwave.html</loc>
+    <lastmod>2023-10-27</lastmod>
     <priority>0.7</priority>
-    <changefreq>monthly</changefreq>
   </url>
-
   <url>
     <loc>https://bitstart.club/about.html</loc>
+    <lastmod>2023-10-27</lastmod>
     <priority>0.5</priority>
-    <changefreq>monthly</changefreq>
   </url>
   <url>
     <loc>https://bitstart.club/contact.html</loc>
+    <lastmod>2023-10-27</lastmod>
     <priority>0.5</priority>
-    <changefreq>monthly</changefreq>
   </url>
   <url>
     <loc>https://bitstart.club/privacy.html</loc>
+    <lastmod>2023-10-27</lastmod>
     <priority>0.5</priority>
-    <changefreq>monthly</changefreq>
   </url>
   <url>
     <loc>https://bitstart.club/terms.html</loc>
+    <lastmod>2023-10-27</lastmod>
     <priority>0.5</priority>
-    <changefreq>monthly</changefreq>
   </url>
 </urlset>
